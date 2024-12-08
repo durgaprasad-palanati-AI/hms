@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+<h1>Enter Roll Number</h1>
+<form action="/admin-action/submit" method="POST">
+  <label for="rollNumber">Roll Number:</label>
+  <input type="text" name="rollNumber" id="rollNumber" placeholder="Enter roll number" required><br><br>
+
+  <!-- Hidden input to carry the chosen action (view/edit) -->
+  <input type="hidden" name="action" value="<%= action %>">
+
+  <button type="submit">Submit</button>
+  <p><a href="/logout">Logout</a></p> <!-- Add Logout Option -->
+</form>

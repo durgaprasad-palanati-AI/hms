@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
+<body>
+  <h2>Welcome, <%= student.name %></h2>
+  <p>Roll Number: <%= student.roll_number %></p>
+  <p>Gender: <%= student.gender %></p>
+  <p>Course: <%= student.course %></p>
+  <p>Year: <%= student.year %></p>
+  <p><a href="/studenthistory">View History</a></p>
+  <p><a href="/logout">Logout</a></p> <!-- Add Logout Option -->
+</body>
+</html>

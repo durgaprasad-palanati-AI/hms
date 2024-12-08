@@ -1,0 +1,148 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+h1 {
+  color: #4CAF50;
+  text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.message {
+  padding: 15px;
+  background-color: #e7f5e9;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  border-radius: 4px;
+}
+
+form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+form input, form button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  min-height: 40px; /* Ensure minimum height for uniformity */
+  display: flex; /* Align text properly */
+  justify-content: center; /* Center text horizontally */
+  align-items: center; /* Center text vertically */
+  font-family: Arial, sans-serif; /* Set font for all buttons */
+  font-size: 16px; /* Set consistent font size */
+}
+
+form button:hover {
+  background-color: #45a049;
+}
+
+.message {
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.success {
+  background-color: #e7f5e9; /* Green background */
+  border: 1px solid #c3e6cb;
+  color: #155724; /* Green text */
+}
+
+.error {
+  background-color: #f8d7da; /* Red background */
+  border: 1px solid #f5c6cb;
+  color: #721c24; /* Red text */
+}
+
+/* Link container styles */
+p {
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+/* Styling for links */
+a {
+  text-decoration: none;
+  color: white;
+  background-color: #251cd9;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 0 10px;
+  transition: background-color 0.3s;
+}
+
+/* Hover effect for links */
+a:hover {
+  background-color: #45a049;
+}
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th, table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+table th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table a {
+  color: #ff0011;
+  text-decoration: none;
+}
+
+table a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive table styling */
+@media screen and (max-width: 600px) {
+  table {
+    font-size: 14px;
+  }
+
+  table th, table td {
+    padding: 8px;
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "name": "hms",
+    "version": "1.0.0",
+    "description": "Hostel Management System using Express.js and MySQL",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "author": "Durgaprasad",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.20.2",
+        "ejs": "^3.1.9",
+        "express": "^4.18.2",
+        "express-session": "^1.18.1",
+        "mysql": "^2.18.1",
+        "mysql2": "^3.1.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}

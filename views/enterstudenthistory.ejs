@@ -1,39 +1,39 @@
-<link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-<h1>Enter History for Roll Number: <%= rollNumber %></h1>
-<form action="/savestudenthistory" method="POST">
-  <input type="hidden" name="rollNumber" value="<%= rollNumber %>">
-  <label for="room_no">Room No:</label>
-  <input type="text" id="room_no" name="room_no" required><br>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+  <h1>Enter History for Roll Number: <%= rollNumber %></h1>
+  <form action="/savestudenthistory" method="POST">
+    <input type="hidden" name="rollNumber" value="<%= rollNumber %>">
+    <label for="room_no">Room No:</label>
+    <input type="text" id="room_no" name="room_no" required><br>
 
-  <label for="feepaid">Fee Paid:</label>
-  <input type="number" step="0.01" id="feepaid" name="feepaid" required><br>
+    <label for="feepaid">Fee Paid:</label>
+    <input type="number" step="0.01" id="feepaid" name="feepaid" required><br>
 
-  <label for="feedue">Fee Due:</label>
-  <input type="number" step="0.01" id="feedue" name="feedue" required><br>
+    <label for="feedue">Fee Due:</label>
+    <input type="number" step="0.01" id="feedue" name="feedue" required><br>
 
-  <label for="scholarship">Scholarship:</label>
-  <input type="number" step="0.01" id="scholarship" name="scholarship" required><br>
-  <label for="month">Month:</label>
-  <select name="month" id="month" required>
-    <option value="January">January</option>
-    <option value="February">February</option>
-    <option value="March">March</option>
-    <option value="April">April</option>
-    <option value="May">May</option>
-    <option value="June">June</option>
-    <option value="July">July</option>
-    <option value="August">August</option>
-    <option value="September">September</option>
-    <option value="October">October</option>
-    <option value="November">November</option>
-    <option value="December">December</option>
-  </select>
-  <label for="monthlybill">Monthly Bill:</label>
-  <input type="number" step="0.01" id="monthlybill" name="monthlybill" required><br>
+    <label for="scholarship">Scholarship:</label>
+    <input type="number" step="0.01" id="scholarship" name="scholarship" required><br>
+    <label for="month">Month:</label>
+    <select name="month" id="month" required>
+      <option value="January">January</option>
+      <option value="February">February</option>
+      <option value="March">March</option>
+      <option value="April">April</option>
+      <option value="May">May</option>
+      <option value="June">June</option>
+      <option value="July">July</option>
+      <option value="August">August</option>
+      <option value="September">September</option>
+      <option value="October">October</option>
+      <option value="November">November</option>
+      <option value="December">December</option>
+    </select>
+    <label for="monthlybill">Monthly Bill:</label>
+    <input type="number" step="0.01" id="monthlybill" name="monthlybill" required><br>
 
-  <label for="year">Year:</label>
-  <input type="number" id="year" name="year" required><br>
+    <label for="year">Year:</label>
+    <input type="number" id="year" name="year" required><br>
 
-  <button type="submit">Save</button>
- <p><a href="/logout">Logout</a></p>  <!-- Add Logout Option -->
-</form>
+    <button type="submit">Save</button>
+  <p><a href="/logout">Logout</a></p>  <!-- Add Logout Option -->
+  </form>

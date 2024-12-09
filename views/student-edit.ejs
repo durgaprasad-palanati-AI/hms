@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Entry</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
+<body>
+  <h1>Edit details</h1>
+  <form action="/student-edit/<%= student.roll_number %>" method="POST">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="<%= student.name %>" required />
+  
+    <label for="course">Course:</label>
+    <input type="text" id="course" name="course" value="<%= student.course %>" required />
+  
+    <label for="year">Year:</label>
+    <input type="text" id="year" name="year" value="<%= student.year %>" required />
+  
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" required>
+      <option value="Male" <%= student.gender === 'Male' ? 'selected' : '' %>>Male</option>
+      <option value="Female" <%= student.gender === 'Female' ? 'selected' : '' %>>Female</option>
+      <option value="Other" <%= student.gender === 'Other' ? 'selected' : '' %>>Other</option>
+    </select>
+  
+    <button type="submit">Update</button>
+  </form>
+  <p><a href="/dashboard">Dashboard</a></p>
+  
+</body>
+</html>

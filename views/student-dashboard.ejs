@@ -7,12 +7,29 @@
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 </head>
 <body>
-  <h2>Welcome, <%= student.name %></h2>
-  <p>Roll Number: <%= student.roll_number %></p>
-  <p>Gender: <%= student.gender %></p>
-  <p>Course: <%= student.course %></p>
-  <p>Year: <%= student.year %></p>
+  <h2><%= student.name %>, Welcome to your Dashboard</h2>
+
+  <table border="1" cellspacing="0" cellpadding="10">
+    <tr>
+      <th>Roll Number</th>
+      <td><%= student.roll_number %></td>
+    </tr>
+    <tr>
+      <th>Gender</th>
+      <td><%= student.gender %></td>
+    </tr>
+    <tr>
+      <th>Course</th>
+      <td><%= student.course %></td>
+    </tr>
+    <tr>
+      <th>Year</th>
+      <td><%= student.year %></td>
+    </tr>
+  </table>
+
   <p><a href="/studenthistory">View History</a></p>
+  <p><a href="/student-edit/<%= student.roll_number %>">EDIT</a></p>
   <p><a href="/logout">Logout</a></p> <!-- Add Logout Option -->
 </body>
 </html>

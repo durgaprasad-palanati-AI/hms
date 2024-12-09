@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+<div class="top-links">
+    <a href="/dashboard" class="left-link">Go to Dashboard</a>
+    <a href="/logout" class="right-link">Logout</a>
+  </div>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" style="height: 50px; width: auto;"/>
+  </header>
+<table class="data-table">
+    <thead>
+      <tr>
+        <th>Roll Number</th>
+        <th>Room No</th>
+        <th>Fee Paid</th>
+        <th>Fee Due</th>
+        <th>Month</th>
+        <th>Monthly Bill</th>
+        <th>Scholarship</th>
+        <% if (user && user.is_admin) { %>
+          <th>Edit</th>
+        <% } %>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!history || history.length === 0) { %>
+        <tr>
+          <td colspan="8">No history found.</td>
+        </tr>
+      <% } else { %>
+        <% history.forEach(item => { %>
+          <tr>
+            <td><%= item.roll_number %></td>
+            <td><%= item.room_no %></td>
+            <td><%= item.feepaid %></td>
+            <td><%= item.feedue %></td>
+            <td><%= item.month %></td>
+            <td><%= item.monthlybill %></td>
+            <td><%= item.scholarship %></td>
+            <% if (user && user.is_admin) { %>
+              <td><a href="/editstudenthistory/<%= item.roll_number %>">Edit</a></td>
+            <% } %>
+          </tr>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
+ 

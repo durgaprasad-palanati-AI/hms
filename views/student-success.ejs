@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+  <div class="top-links">
+    <a href="/dashboard" class="left-link">Go to Dashboard</a>
+    <a href="/logout" class="right-link">Logout</a>
+    <% if (user && user.name) { %>
+      <span class="user-name"><%= user.name %></span>
+    <% } %>
+  </div>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

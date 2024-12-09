@@ -1,5 +1,11 @@
 <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-
+<div class="top-links">
+  <a href="/dashboard" class="left-link">Go to Dashboard</a>
+  <a href="/logout" class="right-link">Logout</a>
+  <% if (user && user.name) { %>
+    <span class="user-name"><%= user.name %></span>
+  <% } %>
+</div>
 <form action="/updatestudenthistory" method="POST">
   <input type="hidden" name="roll_number" value="<%= history.roll_number %>" />
   <input type="hidden" name="year" value="<%= history.year %>" />
@@ -38,6 +44,3 @@
   <button type="submit">Update</button>
 </form>
 
-<!-- Link to go back to the dashboard -->
-<p><a href="/dashboard">Go to Dashboard</a></p>
-<p><a href="/logout">Logout</a></p> <!-- Add Logout Option -->

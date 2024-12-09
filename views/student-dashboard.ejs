@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+  <div class="top-links">
+    <a href="/logout" class="right-link">Logout</a>
+    <% if (user && user.name) { %>
+      <span class="user-name"><%= user.name %></span>
+    <% } %>
+  </div>
 <head>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" style="height: 50px; width: auto;"/>
+  </header>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Dashboard</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 </head>
 <body>
-  <h2><%= student.name %>, Welcome to your Dashboard</h2>
+  <h2> Welcome to your Dashboard</h2>
 
   <table border="1" cellspacing="0" cellpadding="10">
     <tr>
@@ -30,6 +39,6 @@
 
   <p><a href="/studenthistory">View History</a></p>
   <p><a href="/student-edit/<%= student.roll_number %>">EDIT</a></p>
-  <p><a href="/logout">Logout</a></p> <!-- Add Logout Option -->
+ 
 </body>
 </html>

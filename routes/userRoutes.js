@@ -111,7 +111,7 @@ router.post('/admin-action', (req, res) => {
   if (action === 'view' || action === 'edit') {
     // Render the page for roll number entry with the selected action
     res.render('enter-roll-number', { action });
-  } else {
+  }  else {
     return res.status(400).send('Invalid action selected');
   }
 });
@@ -136,7 +136,8 @@ router.post('/admin-action/submit', (req, res) => {
       return res.redirect(`/studenthistory/${rollNumber}`);  // Redirect to view student history
     } else if (action === 'edit') {
       return res.redirect(`/editstudenthistory/${rollNumber}`); // Redirect to edit student history
-    } else {
+    } 
+    else {
       return res.status(400).send('Invalid action selected');
     }
   });
@@ -268,6 +269,7 @@ router.get('/studenthistory', (req, res) => {
 });
 
 // Route to view student history (for admin)
+
 router.get('/studenthistory/:roll_number', (req, res) => {
   const rollNumber = req.params.roll_number;
 
@@ -278,6 +280,27 @@ router.get('/studenthistory/:roll_number', (req, res) => {
       return res.status(500).send('Error fetching student history');
     }
     res.render('studenthistory', { history: results, roll_number: rollNumber});
+  });
+});
+
+// Route to view all students' history (Admin )
+router.get('/viewallstudentshistory', (req, res) => {
+  // Query to fetch all student history
+  const query = 'SELECT * FROM studenthistory';
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching student history:', err);
+      return res.status(500).send('Error fetching student history');
+    }
+
+    console.log('Student History Results:', results);
+
+    // Render the student history view with all records
+    res.render('viewallstudentshistory', { 
+      history: results || [], // Pass results or an empty array
+      user: req.session ? req.session.user : null, // Pass session user or null
+    });
   });
 });
 //enter history

@@ -1,11 +1,25 @@
 <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+<body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" style="height: 50px; width: auto;"/>
+  </header>
+<div class="top-links">
+  <a href="/dashboard" class="left-link">Go to Dashboard</a>
+  <a href="/logout" class="right-link">Logout</a>
+  <% if (user && user.name) { %>
+    <span class="user-name"><%= user.name %></span>
+  <% } %>
+</div>
 <h1>Admin Dashboard</h1>
 <form action="/admin-action" method="POST">
+  
+  <a href="/viewallstudentshistory">View all</a>
+
   <label for="action">Choose an action:</label><br>
   <select name="action" id="action">
     <option value="view">View Student History</option>
     <option value="edit">Edit Student History</option>
-  </select><br><br>
-  <button type="submit">Go</button>
-  <a href="/logout">Logout</a> <!-- Add Logout Option -->
+   
+  </select><br>
 </form>
+</body>

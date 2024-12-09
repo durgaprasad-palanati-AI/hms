@@ -1,5 +1,13 @@
 <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 
+<div class="top-links">
+  <a href="/dashboard" class="left-link">Go to Dashboard</a>
+  <a href="/logout" class="right-link">Logout</a>
+  <% if (user && user.name) { %>
+    <span class="user-name"><%= user.name %></span>
+  <% } %>
+</div>
+<h1> History </h1>
 <table class="data-table">
   <thead>
     <tr>
@@ -16,7 +24,7 @@
     </tr>
   </thead>
   <tbody>
-    <% if (history.length === 0) { %>
+    <% if (!history ||history.length === 0) { %>
       <tr>
         <td colspan="7">No history found for this student.</td>
         <% if (user && user.is_admin) { %>
@@ -41,6 +49,3 @@
     <% } %>
   </tbody>
 </table>
-
-<p><a href="/dashboard">Go to Dashboard</a></p>
-<p><a href="/logout">Logout</a></p> <!-- Add Logout Option -->

@@ -1,12 +1,23 @@
-<link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>editstudenthistory</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
 <body>
-    <header>
-      <img src="/images/Headermgujpg.webp" alt="Logo"/>
-      <h2>Registration Successful!</h2>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+     <span>You are logged in as <%= user.name %></span>
+       <% } %>
+       <a href="/logout" class="right-link">Logout</a>
+     </h3>
     </header>
 
-<p>Details edited successfully.</p>
-
-<!-- Link to go back to the dashboard -->
-<p><a href="/dashboard">Go to Dashboard</a></p>
-<p><a href="/logout">Logout</a></p> <!-- Add Logout Option -->
+<div class="center-links">
+  <p>Details edited successfully.</p>
+  <a href="/dashboard">Go to Dashboard</a>
+</div>

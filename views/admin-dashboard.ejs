@@ -1,23 +1,38 @@
-<link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
+<body>
   <header>
-    <img src="/images/Headermgujpg.webp" alt="Logo"/>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+     <% if (user && user.name) { %>
+    <span>You are logged in as <%= user.name %></span>
+      <% } %>
+      <a href="/logout" class="right-link">Logout</a>
+    </h3>
   </header>
-  <h3 class="header">
-    <% if (user && user.name) { %>
-      <span class="user-name"><%= user.name %></span>
-    <% } %>
-    <a href="/logout" class="right-link">Logout</a>
-  </h3>
+</body>
   <h1>Admin Dashboard</h1>
-  <form action="/admin-action" method="POST">
-   
-    <a href="/viewallstudentshistory">View all</a>
-
-    <label for="action">Choose an action:</label><br>
-    <select name="action" id="action">
+ 
+  <form action="/admin-action" method="POST" class="login-form">
+    
+    <div class="center-links">
+      <a href="/viewallstudentshistory" class="action-link">View all students History</a>
+      <p>OR</p>
+      <p>Select an option from below:</p>
+    </div>
+    
+    <label for="action">Choose Action:</label><br>
+    <select name="action" id="action" class="dropdown">
       <option value="view">View Student History</option>
       <option value="edit">Edit Student History</option>
     </select><br>
-    <button type="submit">Submit</button>
+    <button type="submit" class="btn">Submit</button>
   </form>
+
+</html>

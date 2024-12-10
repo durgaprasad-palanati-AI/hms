@@ -1,18 +1,30 @@
-<link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
 <body>
   <header>
-    <img src="/images/Headermgujpg.webp" alt="Logo"/>
-    <h1>Enter Roll Number</h1>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+     <span>You are logged in as <%= user.name %></span>
+       <% } %>
+       <a href="/logout" class="right-link">Logout</a>
+     </h3>
   </header>
-
-<form action="/admin-action/submit" method="POST">
-  <label for="rollNumber">Roll Number:</label>
-  <input type="text" name="rollNumber" id="rollNumber" placeholder="Enter roll number" required><br><br>
+<form action="/admin-action/submit" method="POST" class="login-form">
+  
+  <label for="rollNumber">Roll Number</label>
+   <input type="text" name="rollNumber" id="rollNumber" placeholder="Enter roll number" required>
 
   <!-- Hidden input to carry the chosen action (view/edit) -->
   <input type="hidden" name="action" value="<%= action %>">
 
   <button type="submit">Submit</button>
-  <p><a href="/logout">Logout</a></p> <!-- Add Logout Option -->
 </form>
 </body>
+</html>

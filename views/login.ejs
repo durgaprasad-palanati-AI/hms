@@ -9,17 +9,15 @@
 <body>
   <header>
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
-   
+    <h1>Login</h1>
   </header>
-  <h2>Login</h2>
-  <!-- Display the error message only if it exists -->
   <% if (typeof error !== 'undefined' && error) { %>
     <div class="message">
       <p class="error"><%= error %></p>
     </div>
   <% } %>
 
-  <form action="/login" method="POST">
+  <form action="/login" method="POST" class="login-form">
     <label for="username">Username:</label>
     <input type="text" name="username" id="username" required><br>
 
@@ -28,7 +26,8 @@
 
     <button type="submit">Login</button>
   </form>
-
+  <div class="center-links">
   <p>Don't have an account? <a href="/register">Register</a></p>
+  </div>
 </body>
 </html>

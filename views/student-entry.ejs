@@ -5,24 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Entry</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-  <header>
-    <img src="/images/Headermgujpg.webp" alt="Logo"/>
-  </header>
 </head>
 <body>
-  <h1>Student Entry</h1>
-  <form action="/student-entry" method="POST">
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+     <span>You are logged in as <%= user.name %></span>
+       <% } %>
+       <a href="/logout" class="right-link">Logout</a>
+     </h3>
+     <h1>Enter details below</h1>
+  </header>
+<body>
+  <form action="/student-entry" method="POST" class="login-form">
     <label for="roll_number">Roll Number</label>
-    <input type="text" id="roll_number" name="roll_number" required><br><br>
+    <input type="text" id="roll_number" name="roll_number" required>
 
     <label for="name">Name</label>
-    <input type="text" id="name" name="name" required><br><br>
+    <input type="text" id="name" name="name" required>
 
     <label for="course">Course</label>
-    <input type="text" id="course" name="course" required><br><br>
+    <input type="text" id="course" name="course" required>
 
     <label for="year">Year</label>
-    <input type="text" id="year" name="year" required><br><br>
+    <input type="text" id="year" name="year" required>
 
     <label for="gender">Gender</label>
     <select id="gender" name="gender" required>
@@ -32,7 +39,10 @@
       <option value="other">Other</option>
     </select><br><br>
    <p><button type="submit">Submit</button></p> 
-   <p><a href="/logout">Logout</a></p>  <!-- Add Logout Option -->
+   
   </form>
 </body>
+<div class="center-links">
+  <a href="/dashboard">Go to Dashboard</a>
+</div>
 </html>

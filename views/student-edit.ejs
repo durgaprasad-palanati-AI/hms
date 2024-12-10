@@ -1,17 +1,25 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Entry</title>
+  <title>Edit Student details</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 </head>
 <body>
   <header>
-    <img src="/images/Headermgujpg.webp" alt="Logo"/>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+     <span>You are logged in as <%= user.name %></span>
+       <% } %>
+       <a href="/logout" class="right-link">Logout</a>
+     </h3>
+     <h1>Edit details</h1>
   </header>
-  <h1>Edit details</h1>
-  <form action="/student-edit/<%= student.roll_number %>" method="POST">
+
+  <form action="/student-edit/<%= student.roll_number %>" method="POST" class="login-form">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" value="<%= student.name %>" required />
   
@@ -30,7 +38,9 @@
   
     <button type="submit">Update</button>
   </form>
-  <p><a href="/dashboard">Dashboard</a></p>
+  <div class="center-links">
+    <a href="/dashboard">Go to Dashboard</a>
+  </div>
   
 </body>
 </html>

@@ -1,12 +1,23 @@
-<link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-<div class="top-links">
-  <a href="/dashboard" class="left-link">Go to Dashboard</a>
-  <a href="/logout" class="right-link">Logout</a>
-</div>
-<header>
-  <img src="/images/Headermgujpg.webp" alt="Logo"/>
-</header>
-<form action="/updatestudenthistory" method="POST">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>editstudenthistory</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
+<body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+     <span>You are logged in as <%= user.name %></span>
+       <% } %>
+       <a href="/logout" class="right-link">Logout</a>
+     </h3>
+     <h1>Edit below details</h1>
+  </header>
+<form action="/updatestudenthistory" method="POST" class="login-form">
     <input type="hidden" name="roll_number" value="<%= history.roll_number %>" /> <!-- Roll Number -->
     <input type="hidden" name="year" value="<%= history.year %>" /> <!-- Year -->
   
@@ -43,3 +54,7 @@
   
     <button type="submit">Update</button>
   </form>
+  <div class="center-links">
+    <a href="/dashboard">Go to Dashboard</a>
+  </div>
+</html>

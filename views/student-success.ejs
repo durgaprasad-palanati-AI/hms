@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <div class="top-links">
-    <a href="/dashboard" class="left-link">Go to Dashboard</a>
-    <a href="/logout" class="right-link">Logout</a>
-    <% if (user && user.name) { %>
-      <span class="user-name"><%= user.name %></span>
-    <% } %>
-  </div>
 <head>
-  <header>
-    <img src="/images/Headermgujpg.webp" alt="Logo"/>
-  </header>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Success</title>
+  <title>Student Entry</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 </head>
 <body>
-  <h2>Student Entry Submitted Successfully!</h2>
-  <p><a href="/dashboard">Go to Dashboard</a></p>
- <p><a href="/logout">Logout</a> </p> <!-- Add Logout Option -->
-</body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+     <span>You are logged in as <%= user.name %></span>
+       <% } %>
+       <a href="/logout" class="right-link">Logout</a>
+     </h3>
+     <h1>Student Entry Submitted Successfully!</h1>
+  </header>
+ 
+  <div class="center-links">
+    <a href="/dashboard">Go to dashboard</a>
+      </div>
 </html>

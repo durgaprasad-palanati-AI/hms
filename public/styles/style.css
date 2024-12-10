@@ -46,7 +46,7 @@ body {
   align-items: right;
   font-size: 14px;
   font-weight: bold;
-  margin-left: 5px; /* Space between the label and the name */
+  margin-right: 5px; /* Space between the label and the name */
 }
 
 /* Styling for logout link */
@@ -54,6 +54,7 @@ body {
   text-decoration: underline;
   color: blue;
   margin-left: 10px; /* Space between user name and logout */
+  font-size: 14px;
 }
 
 /* Spacer between User and Logout */
@@ -199,6 +200,22 @@ table a:hover {
     padding: 8px;
   }
 }
+.center-links {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.center-links a {
+  display: inline-block;
+  margin: 0 10px; /* Adds space between links */
+  text-decoration: none;
+  color: #007bff; /* Example link color */
+  font-size: 1.2rem;
+}
+
+.center-links a:hover {
+  text-decoration: underline; /* Adds underline on hover */
+}
 /* General style for all labels */
 label {
   font-family: Arial, sans-serif; /* Font style */
@@ -231,7 +248,7 @@ h1 {
 span {
   color: red;       /* Makes the text red */
   font-weight: bold; /* Makes the text bold */
-  font-size: 20px;   /* Sets the font size to 20px */
+  font-size: 14px;   /* Sets the font size to 20px */
 }
 header h2 {
   text-align: center; /* Center align the text */
@@ -239,11 +256,15 @@ header h2 {
   font-size: 1.8em; /* Adjust the font size */
   color: #333; /* Optional: Change text color */
 }
+/* Style for the header h3 */
 header h3 {
-  text-align: right; /* Center align the text */
-  margin-bottom: 20px; /* Add space between the heading and the form */
-  font-size: 1.8em; /* Adjust the font size */
-  color: #333; /* Optional: Change text color */
+  display: flex; /* Enables flexbox */
+  justify-content: flex-end; /* Aligns content to the right */
+  align-items: center; /* Vertically aligns items */
+  margin: 0; /* Removes default margin */
+  padding: 10px 20px; /* Adds padding for spacing */
+  font-size: 1.8em; /* Adjust font size */
+  color: #333; /* Optional: Adjust text color */
 }
 header img {
   width: 100%; /* Make the image span the entire width of the window */
@@ -281,4 +302,53 @@ header h2 {
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 1.5em;
+}
+/* General styling for the logo image */
+.logo-image {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%; /* Ensures the image scales responsively */
+}
+
+/* Styling for the login form */
+.login-form {
+  text-align: left;
+  width: 300px;
+  margin: 20px auto; /* Centers the form horizontally */
+}
+
+.login-form label {
+  display: block;
+  font-size: 0.9rem; /* Adjust label font size */
+  width: auto; /* Prevents labels from stretching to the input width */
+  margin-bottom: 5px; /* Adds spacing between labels and inputs */
+}
+
+.login-form input {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 15px; /* Adds spacing between input fields */
+  box-sizing: border-box; /* Includes padding in width calculation */
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Error message styling */
+.message {
+  color: #ff0000;
+  text-align: center;
+  margin-bottom: 20px;
 }

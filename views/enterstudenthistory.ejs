@@ -1,5 +1,10 @@
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-  <h1>Enter History for Roll Number: <%= rollNumber %></h1>
+  <body>
+    <header>
+      <img src="/images/Headermgujpg.webp" alt="Logo"/>
+      <h1>Enter History for Roll Number: <%= rollNumber %></h1>
+    </header>
+  
   <form action="/savestudenthistory" method="POST">
     <input type="hidden" name="rollNumber" value="<%= rollNumber %>">
     <label for="room_no">Room No:</label>
@@ -37,3 +42,4 @@
     <button type="submit">Save</button>
   <p><a href="/logout">Logout</a></p>  <!-- Add Logout Option -->
   </form>
+  </body>

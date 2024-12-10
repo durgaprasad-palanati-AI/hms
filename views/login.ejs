@@ -8,12 +8,12 @@
 </head>
 <body>
   <header>
-    <img src="/images/Headermgujpg.webp" alt="Logo" style="height: 50px; width: auto;"/>
-    <h2>Login</h2>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+   
   </header>
-
-   <!-- Display the error message only if it exists -->
-   <% if (typeof error !== 'undefined' && error) { %>
+  <h2>Login</h2>
+  <!-- Display the error message only if it exists -->
+  <% if (typeof error !== 'undefined' && error) { %>
     <div class="message">
       <p class="error"><%= error %></p>
     </div>

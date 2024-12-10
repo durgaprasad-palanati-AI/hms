@@ -1,13 +1,17 @@
 <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+<body>
+<header>
+  <img src="/images/Headermgujpg.webp" alt="Logo" >
+  <div class="top-right">
+    <h1> History </h1>
+    <% if (user && user.name) { %>
+      <span class="user-name"><%= user.name %></span>
+    <% } %>
+    <a href="/logout" class="right-link">Logout</a>
+  </div>
+ 
 
-<div class="top-links">
-  <a href="/dashboard" class="left-link">Go to Dashboard</a>
-  <a href="/logout" class="right-link">Logout</a>
-  <% if (user && user.name) { %>
-    <span class="user-name"><%= user.name %></span>
-  <% } %>
-</div>
-<h1> History </h1>
+</header>
 <table class="data-table">
   <thead>
     <tr>
@@ -49,3 +53,10 @@
     <% } %>
   </tbody>
 </table>
+<br>
+
+  <div class="left-section">
+    <a href="/dashboard" class="left-link">Go to Dashboard</a>
+  </div>
+
+</body>

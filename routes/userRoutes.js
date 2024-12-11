@@ -62,7 +62,7 @@ router.post('/login', (req, res) => {
 
     if (results.length === 0) {
       //return res.status(401).send('Invalid credentials');
-      return res.render('login', { error: 'Invalid credentials' }); // Pass error message to view
+      return res.render('login', { error: 'Account not found' }); // Pass error message to view
       
     }
 

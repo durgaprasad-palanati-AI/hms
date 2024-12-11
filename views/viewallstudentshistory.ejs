@@ -1,12 +1,22 @@
-<link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
+<body>
   <header>
-    <img src="/images/Headermgujpg.webp" alt="Logo"/>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+     <span>You are logged in as <%= user.name %></span>
+       <% } %>
+       <a href="/logout" class="right-link">Logout</a>
+     </h3>
+     <h1>All students history</h1>
   </header>
-  <div class="top-links">
-    <a href="/dashboard" class="left-link">Go to Dashboard</a>
-    <a href="/logout" class="right-link">Logout</a>
-  </div>
 <table class="data-table">
     <thead>
       <tr>
@@ -45,4 +55,8 @@
       <% } %>
     </tbody>
   </table>
+  <div class="center-links">
+    <a href="/dashboard">Go to Dashboard</a>
+  </div>
+  </html>
  

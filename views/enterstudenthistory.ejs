@@ -1,23 +1,35 @@
-  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-  <body>
-    <header>
-      <img src="/images/Headermgujpg.webp" alt="Logo"/>
-      <h1>Enter History for Roll Number: <%= rollNumber %></h1>
-    </header>
+ 
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>editstudenthistory</title>
+   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+ </head>
+ <header>
+  <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+  <h3 class="header">
+    <% if (user && user.name) { %>
+   <span>You are logged in as <%= user.name %></span>
+     <% } %>
+     <a href="/logout" class="right-link">Logout</a>
+   </h3>
+   <h1>Enter History for Roll Number: <%= rollNumber %></h1>
   
-  <form action="/savestudenthistory" method="POST">
+  <form action="/savestudenthistory" method="POST" class="login-form">
     <input type="hidden" name="rollNumber" value="<%= rollNumber %>">
     <label for="room_no">Room No:</label>
-    <input type="text" id="room_no" name="room_no" required><br>
+    <input type="text" id="room_no" name="room_no" required>
 
     <label for="feepaid">Fee Paid:</label>
-    <input type="number" step="0.01" id="feepaid" name="feepaid" required><br>
+    <input type="number" step="0.01" id="feepaid" name="feepaid" required>
 
     <label for="feedue">Fee Due:</label>
-    <input type="number" step="0.01" id="feedue" name="feedue" required><br>
+    <input type="number" step="0.01" id="feedue" name="feedue" required>
 
     <label for="scholarship">Scholarship:</label>
-    <input type="number" step="0.01" id="scholarship" name="scholarship" required><br>
+    <input type="number" step="0.01" id="scholarship" name="scholarship" required>
     <label for="month">Month:</label>
     <select name="month" id="month" required>
       <option value="January">January</option>
@@ -34,12 +46,15 @@
       <option value="December">December</option>
     </select>
     <label for="monthlybill">Monthly Bill:</label>
-    <input type="number" step="0.01" id="monthlybill" name="monthlybill" required><br>
+    <input type="number" step="0.01" id="monthlybill" name="monthlybill" required>
 
     <label for="year">Year:</label>
-    <input type="number" id="year" name="year" required><br>
+    <input type="number" id="year" name="year" required>
 
     <button type="submit">Save</button>
-  <p><a href="/logout">Logout</a></p>  <!-- Add Logout Option -->
   </form>
   </body>
+  <div class="center-links">
+    <a href="/dashboard">Go to Dashboard</a>
+  </div>
+</html>

@@ -128,7 +128,9 @@ router.post('/admin-action/submit', (req, res) => {
     }
 
     if (results.length === 0) {
-      return res.status(404).send('Student not found');
+      //return res.status(404).send('Student not found');
+     return res.render('student-not-found');
+      
     }
 
     // Redirect to view or edit student history based on the action
@@ -219,6 +221,7 @@ router.get('/student-edit/:roll_number', (req, res) => {
 
     if (results.length === 0) {
       return res.status(404).send('Student not found');
+      //****
     }
 
     // Render the edit form with the fetched data
@@ -244,7 +247,7 @@ router.post('/student-edit/:roll_number', (req, res) => {
       return res.status(500).send('Error updating student data');
     }
 
-    res.redirect('/dashboard');
+    res.render('student-edit-success');
   });
 });
 
@@ -324,7 +327,7 @@ router.get('/editstudenthistory/:roll_number', (req, res) => {
       return res.render('enterstudenthistory', { rollNumber });
     }
     res.render('updatestudenthistory', { history: results[0] });
-    // * 11 res.render('editstudenthistory', { history: results[0] });
+    //res.render('history-success'); // Render the success page
   });
 });
 

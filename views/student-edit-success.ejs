@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+  <title>Student Entry</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 </head>
 <body>
@@ -15,19 +15,10 @@
        <% } %>
        <a href="/logout" class="right-link">Logout</a>
      </h3>
+     <h1>Student Data edited Successfully!</h1>
   </header>
-<form action="/admin-action/submit" method="POST" class="login-form">
-  
-  <label for="rollNumber">Roll Number</label>
-   <input type="text" name="rollNumber" id="rollNumber" placeholder="Enter roll number" required>
-
-  <!-- Hidden input to carry the chosen action (view/edit) -->
-  <input type="hidden" name="action" value="<%= action %>">
-
-  <button type="submit">Submit</button>
-</form>
-</body>
-<div class="center-links">
-  <a href="/dashboard">Go to dashboard</a>
-    </div>
+ 
+  <div class="center-links">
+    <a href="/dashboard">Go to dashboard</a>
+      </div>
 </html>

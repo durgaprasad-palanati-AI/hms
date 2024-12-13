@@ -139,6 +139,10 @@ router.get('/student-entry', (req, res) => {
   res.render('student-entry');
 });
 //student entry
+router.get('/student-success', (req, res) => {
+  res.render('student-success'); // Render the success page
+});
+
 // POST route for handling student entry form submission
 router.post('/student-entry', (req, res) => {
   const { roll_number, name, course, year, gender } = req.body;
@@ -158,7 +162,7 @@ router.post('/student-entry', (req, res) => {
 
     // Redirect or send a success message
     
-    res.render('student-success');
+    res.redirect('student-success');
 
   });
 });

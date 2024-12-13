@@ -83,7 +83,7 @@ router.post('/login', (req, res) => {
       req.session.user = results[0];
 
       // Check if the user is an admin
-      if (results[0].name === 'admin') {
+      if (results[0].is_admin) {
         req.session.user.is_admin = true; // Add is_admin flag for convenience
         return res.redirect('/admin-dashboard'); // Redirect admin to admin dashboard
       } else {
@@ -210,21 +210,48 @@ router.post('/student-edit/:roll_number', (req, res) => {
   });
 });
 
-
 // Route to view student history (for admin)
 
 router.get('/studenthistory', (req, res) => {
-  const rollNumber = req.query.rollNumber;
+  let rollNumber = req.query.rollNumber;
 
-  // Fetch the student's history from the database
+  // If user is not admin, determine rollNumber from session or context
+  if (!rollNumber && req.session.user && !req.session.user.is_admin) {
+    rollNumber = req.session.user.roll_number; // Assuming it's stored in session
+  }
+
+  if (!rollNumber) {
+    return res.status(400).send('Roll number is required.');
+  }
+
+  // Fetch the student's history
   db.query('SELECT * FROM studenthistory WHERE roll_number = ?', [rollNumber], (err, results) => {
     if (err) {
       console.error('Error fetching student history:', err);
       return res.status(500).send('Error fetching student history');
     }
-    res.render('studenthistory', { history: results, roll_number: rollNumber});
+
+    res.render('studenthistory', {
+      history: results,
+      roll_number: rollNumber,
+      user: req.session.user,
+    });
   });
 });
+//
+router.get('/studenthistory/:rollNumber', (req, res) => {
+  const rollNumber = req.params.rollNumber;
+
+  // Fetch the student's history from the database using rollNumber
+  db.query('SELECT * FROM studenthistory WHERE roll_number = ?', [rollNumber], (err, results) => {
+    if (err) {
+      console.error('Error fetching student history:', err);
+      return res.status(500).send('Error fetching student history');
+    }
+    res.render('studenthistory', { history: results, roll_number: rollNumber });
+  });
+});
+
 
 // Route to view all students' history (Admin )
 router.get('/viewallstudentshistory', (req, res) => {
@@ -344,15 +371,6 @@ router.post('/updatestudenthistory/:roll_number', (req, res) => {
 
 
 // Logout Route
-router.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error('Error during logout:', err);
-      return res.status(500).send('Error logging out');
-    }
-    res.redirect('/login'); // Redirect to login page
-  });
-});
 
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {

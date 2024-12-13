@@ -17,59 +17,57 @@
     </h3>
     <h1>History</h1>
   </header>
-<table class="data-table">
-  <thead>
-    <tr>
-      <th>Roll Number</th>
-      <th>Room No</th>
-      <th>Fee Paid</th>
-      <th>Fee Due</th>
-      <th>Month</th>
-      <th>Monthly Bill</th>
-     <th>Scholarship</th>
-      <% if (typeof user !== 'undefined' && user && user.is_admin) { %>
-        <th>Edit</th>
-      <% } %>
-    </tr>
-  </thead>
-  <tbody>
-    <% if (!history ||history.length === 0) { %>
+  <table class="data-table">
+    <thead>
       <tr>
-        <td colspan="7">No history found for this student.</td>
+        <th>Roll Number</th>
+        <th>Room No</th>
+        <th>Fee Paid</th>
+        <th>Fee Due</th>
+        <th>Month</th>
+        <th>Monthly Bill</th>
+        <th>Scholarship</th>
         <% if (user && user.is_admin) { %>
-          <td><a href="/enterstudenthistory/<%= roll_number %>">Click here</a></td>
+          <th>Edit</th>
         <% } %>
       </tr>
-    <% } else { %>
-      <% history.forEach(item => { %>
+    </thead>
+    <tbody>
+      <% if (!history || history.length === 0) { %>
         <tr>
-          <td><%= item.roll_number %></td>
-          <td><%= item.room_no %></td>
-          <td><%= item.feepaid %></td>
-          <td><%= item.feedue %></td>
-          <td><%= item.month %></td>
-          <td><%= item.monthlybill %></td>
-          <td><%= item.scholarship %></td>
-           <% if (user && user.is_admin) { %>
-            <td>
-              <a href="/updatestudenthistory/<%= item.roll_number %>?month=<%= item.month %>&year=<%= item.year %>">
-                Click here
-              </a>
-            </td>
-            
+          <td colspan="<%= user && user.is_admin ? 8 : 7 %>">No history found for this student.</td>
+          <% if (user && user.is_admin) { %>
+            <td><a href="/enterstudenthistory/<%= roll_number %>">Click here</a></td>
           <% } %>
         </tr>
-      <% }) %>
+      <% } else { %>
+        <% history.forEach(item => { %>
+          <tr>
+            <td><%= item.roll_number %></td>
+            <td><%= item.room_no %></td>
+            <td><%= item.feepaid %></td>
+            <td><%= item.feedue %></td>
+            <td><%= item.month %></td>
+            <td><%= item.monthlybill %></td>
+            <td><%= item.scholarship %></td>
+            <% if (user && user.is_admin) { %>
+              <td>
+                <a href="/updatestudenthistory/<%= item.roll_number %>?month=<%= item.month %>&year=<%= item.year %>">
+                  Edit
+                </a>
+              </td>
+            <% } %>
+          </tr>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
+  <br>
+  <div class="center-links">
+    <% if (user && user.is_admin) { %>
+      <a href="/enterstudenthistory/<%= roll_number %>">Add new history</a>
     <% } %>
-  </tbody>
-</table>
-<br>
-<div class="center-links">
-  <% if (user && user.is_admin) { %>
-    <td><a href="/enterstudenthistory/<%= roll_number %>">Add new history</a></td>
-  <% } %>
-  <a href="/dashboard">Go to Dashboard</a>
-</div>
-
+    <a href="/dashboard">Go to Dashboard</a>
+  </div>
 </body>
 </html>

@@ -18,10 +18,12 @@
      <h1>Edit below details</h1>
   </header>
 <body>
-<form action="/updatestudenthistory" method="POST" class="login-form">
+  <form action="/updatestudenthistory/<%= history.roll_number %>" method="POST" class="login-form">
+
   <input type="hidden" name="roll_number" value="<%= history.roll_number %>" />
   <input type="hidden" name="year" value="<%= history.year %>" />
-  
+  <input type="hidden" name="month" value="<%= history.month %>" />
+
   <label for="room_no">Rooms Number:</label>
   <input type="text" id="room_no" name="room_no" value="<%= history.room_no %>" required />
   
@@ -34,22 +36,7 @@
   <label for="scholarship">Scholarship:</label>
   <input type="number" id="scholarship" name="scholarship" value="<%= history.scholarship %>" step="0.01" required />
   
-  <label for="month">Month:</label>
-  <select id="month" name="month" required>
-    <option value="January" <% if (history.month === 'January') { %> selected <% } %>>January</option>
-    <option value="February" <% if (history.month === 'February') { %> selected <% } %>>February</option>
-    <option value="March" <% if (history.month === 'March') { %> selected <% } %>>March</option>
-    <option value="April" <% if (history.month === 'April') { %> selected <% } %>>April</option>
-    <option value="May" <% if (history.month === 'May') { %> selected <% } %>>May</option>
-    <option value="June" <% if (history.month === 'June') { %> selected <% } %>>June</option>
-    <option value="July" <% if (history.month === 'July') { %> selected <% } %>>July</option>
-    <option value="August" <% if (history.month === 'August') { %> selected <% } %>>August</option>
-    <option value="September" <% if (history.month === 'September') { %> selected <% } %>>September</option>
-    <option value="October" <% if (history.month === 'October') { %> selected <% } %>>October</option>
-    <option value="November" <% if (history.month === 'November') { %> selected <% } %>>November</option>
-    <option value="December" <% if (history.month === 'December') { %> selected <% } %>>December</option>
-  </select>
-  
+ 
   <label for="monthlybill">Monthly Bill:</label>
   <input type="number" id="monthlybill" name="monthlybill" value="<%= history.monthlybill %>" step="0.01" required />
   

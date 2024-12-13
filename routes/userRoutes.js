@@ -104,47 +104,6 @@ router.get('/admin-dashboard', (req, res) => {
   res.render('admin-dashboard');
 });
 
-// Admin Action (view/edit student history)
-router.post('/admin-action', (req, res) => {
-  const { action } = req.body;
-
-  if (action === 'view' || action === 'edit') {
-    // Render the page for roll number entry with the selected action
-    res.render('enter-roll-number', { action });
-  }  else {
-    return res.status(400).send('Invalid action selected');
-  }
-});
-
-// Route to handle roll number submission for admin actions
-router.post('/admin-action/submit', (req, res) => {
-  const { rollNumber, action } = req.body;
-
-  // Check if the roll number exists in the students table
-  db.query('SELECT * FROM students WHERE roll_number = ?', [rollNumber], (err, results) => {
-    if (err) {
-      console.error('Error fetching student data:', err);
-      return res.status(500).send('Error fetching student data');
-    }
-
-    if (results.length === 0) {
-      //return res.status(404).send('Student not found');
-     return res.render('student-not-found');
-      
-    }
-
-    // Redirect to view or edit student history based on the action
-    if (action === 'view') {
-      return res.redirect(`/studenthistory/${rollNumber}`);  // Redirect to view student history
-    } else if (action === 'edit') {
-      return res.redirect(`/editstudenthistory/${rollNumber}`); // Redirect to edit student history
-    } 
-    else {
-      return res.status(400).send('Invalid action selected');
-    }
-  });
-});
-
 // User Dashboard Route
 router.get('/dashboard',isAuthenticated, async (req, res) => {
   if (!req.session.user) {
@@ -252,29 +211,10 @@ router.post('/student-edit/:roll_number', (req, res) => {
 });
 
 
-// Route: View Student History for Admin or Regular User
-router.get('/studenthistory', (req, res) => {
-  const rollNumber = req.session.user.roll_number;
-
-  // Admin or regular user can view their own history
-  const query = req.session.user.is_admin
-    ? 'SELECT * FROM studenthistory'
-    : 'SELECT * FROM studenthistory WHERE roll_number = ?';
-
-  db.query(query, [rollNumber], (err, results) => {
-    if (err) {
-      console.error('Error fetching student history:', err);
-      return res.status(500).send('Error fetching student history');
-    }
-
-    res.render('studenthistory', { history: results });
-  });
-});
-
 // Route to view student history (for admin)
 
-router.get('/studenthistory/:roll_number', (req, res) => {
-  const rollNumber = req.params.roll_number;
+router.get('/studenthistory', (req, res) => {
+  const rollNumber = req.query.rollNumber;
 
   // Fetch the student's history from the database
   db.query('SELECT * FROM studenthistory WHERE roll_number = ?', [rollNumber], (err, results) => {
@@ -326,8 +266,8 @@ router.get('/editstudenthistory/:roll_number', (req, res) => {
     if (results.length === 0) {
       return res.render('enterstudenthistory', { rollNumber });
     }
-    res.render('updatestudenthistory', { history: results[0] });
-    //res.render('history-success'); // Render the success page
+   // res.render('updatestudenthistory', { history: results[0] });
+    res.render('history-success'); // Render the success page
   });
 });
 
@@ -351,31 +291,58 @@ router.post('/savestudenthistory', (req, res) => {
       console.error('Error saving student history:', err);
       return res.status(500).send('Error saving student history');
     }
-
     res.redirect(`/editstudenthistory/${rollNumber}`);
   });
 });
-router.get('/updatestudenthistory', (req, res) => {
-  res.render('updatestudenthistory');
-});
-// Route to update student history (admin)
-router.post('/updatestudenthistory', (req, res) => {
-  const { roll_number, room_no, feepaid, feedue, scholarship, month, monthlybill, year } = req.body;
+//
+router.get('/updatestudenthistory/:roll_number', (req, res) => {
+  const { roll_number } = req.params;
+  const { month, year } = req.query; // Ensure these values are passed in the query string
+  console.log('GET /updatestudenthistory:', { roll_number, month, year });
 
+  const fetchQuery = `
+    SELECT * FROM studenthistory 
+    WHERE roll_number = ? AND year = ? AND month = ?`;
+
+  db.query(fetchQuery, [roll_number, year, month], (err, results) => {
+    if (err) {
+      console.error('Error fetching student history:', err);
+      return res.status(500).send('Error fetching student history');
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send('Student history not found');
+    }
+
+    res.render('editstudenthistory', { history: results[0], user: req.user });
+  });
+});
+
+
+// Route to update student history (admin)
+router.post('/updatestudenthistory/:roll_number', (req, res) => {
+  console.log('POST /updatestudenthistory reached');
+  console.log('Request body:', req.body);
+  
+  const { roll_number } = req.params;
+  const { room_no, feepaid, feedue, scholarship, monthlybill, year, month } = req.body;
+ 
   const updateQuery = `
     UPDATE studenthistory 
-    SET room_no = ?, feepaid = ?, feedue = ?, scholarship = ?, month=?, monthlybill = ?
-    WHERE roll_number = ? AND year = ?`;
+    SET room_no = ?, feepaid = ?, feedue = ?, scholarship = ?, monthlybill = ?
+    WHERE roll_number = ? AND year = ? AND month = ?`;
 
-  db.query(updateQuery, [room_no, feepaid, feedue, scholarship, month, monthlybill, roll_number, year], (err, results) => {
+  db.query(updateQuery, [room_no, feepaid, feedue, scholarship, monthlybill, roll_number, year, month], (err, results) => {
     if (err) {
       console.error('Error updating student history:', err);
       return res.status(500).send('Error updating student history');
     }
-    res.render('history-success'); // Render the success page
-    //res.redirect(`/studenthistory/${roll_number}`); // Redirect to the student's history page
+
+    res.render('history-success'); // Success page
   });
 });
+
+
 // Logout Route
 router.get('/logout', (req, res) => {
   req.session.destroy((err) => {

@@ -48,7 +48,10 @@
             <td><%= item.monthlybill %></td>
             <td><%= item.scholarship %></td>
             <% if (user && user.is_admin) { %>
-              <td><a href="/editstudenthistory/<%= item.roll_number %>">Edit</a></td>
+              <td>
+                <a href="/updatestudenthistory/<%= item.roll_number %>?month=<%= item.month %>&year=<%= item.year %>">Edit
+                </a>
+              </td>
             <% } %>
           </tr>
         <% }) %>

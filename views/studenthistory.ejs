@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+  <title>Edit Student History</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 </head>
 <body>
@@ -11,14 +11,12 @@
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
     <h3 class="header">
       <% if (user && user.name) { %>
-     <span>You are logged in as <%= user.name %></span>
-       <% } %>
-       <a href="/logout" class="right-link">Logout</a>
-     </h3>
-     <h1>History</h1>
+        <span>You are logged in as <%= user.name %></span>
+      <% } %>
+      <a href="/logout" class="right-link">Logout</a>
+    </h3>
+    <h1>History</h1>
   </header>
-<body>
-</header>
 <table class="data-table">
   <thead>
     <tr>
@@ -52,8 +50,13 @@
           <td><%= item.month %></td>
           <td><%= item.monthlybill %></td>
           <td><%= item.scholarship %></td>
-          <% if (user && user.is_admin) { %>
-            <td><a href="/editstudenthistory/<%= roll_number %>">Click here</a></td>
+           <% if (user && user.is_admin) { %>
+            <td>
+              <a href="/updatestudenthistory/<%= item.roll_number %>?month=<%= item.month %>&year=<%= item.year %>">
+                Click here
+              </a>
+            </td>
+            
           <% } %>
         </tr>
       <% }) %>
@@ -62,6 +65,9 @@
 </table>
 <br>
 <div class="center-links">
+  <% if (user && user.is_admin) { %>
+    <td><a href="/enterstudenthistory/<%= roll_number %>">Add new history</a></td>
+  <% } %>
   <a href="/dashboard">Go to Dashboard</a>
 </div>
 

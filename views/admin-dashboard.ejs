@@ -10,29 +10,23 @@
   <header>
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
     <h3 class="header">
-     <% if (user && user.name) { %>
-    <span>You are logged in as <%= user.name %></span>
+      <% if (user && user.name) { %>
+        <span>You are logged in as <%= user.name %></span>
       <% } %>
       <a href="/logout" class="right-link">Logout</a>
     </h3>
   </header>
-</body>
+
   <h1>Admin Dashboard</h1>
  
-  <form action="/admin-action" method="POST" class="login-form">
-    
+  <form action="/studenthistory" method="GET" class="login-form">
     <div class="center-links">
-      <a href="/viewallstudentshistory" class="action-link">View all students History</a>
+      <a href="/viewallstudentshistory" class="action-link">View All Students History</a>
       <p>OR</p>
-      <p>Select an option from below:</p>
+      <label for="rollNumber">Enter Student Roll Number:</label>
+      <input type="text" name="rollNumber" id="rollNumber" placeholder="Roll Number" required>
+      <button type="submit" class="btn">View Student History</button>
     </div>
-    
-    <label for="action"></label>
-    <select name="action" id="action" class="dropdown">
-      <option value="view">View Student History</option>
-      <option value="edit">Edit Student History</option>
-    </select><br>
-    <button type="submit" class="btn">Submit</button>
   </form>
-
+</body>
 </html>

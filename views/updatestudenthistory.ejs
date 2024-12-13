@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>editstudenthistory</title>
+  <title>Edit Student History</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 </head>
 <body>
@@ -11,50 +11,39 @@
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
     <h3 class="header">
       <% if (user && user.name) { %>
-     <span>You are logged in as <%= user.name %></span>
-       <% } %>
-       <a href="/logout" class="right-link">Logout</a>
-     </h3>
-     <h1>Edit below details</h1>
+        <span>You are logged in as <%= user.name %></span>
+      <% } %>
+      <a href="/logout" class="right-link">Logout</a>
+    </h3>
+    <h1>Edit Student History</h1>
   </header>
-<form action="/updatestudenthistory" method="POST" class="login-form">
-    <input type="hidden" name="roll_number" value="<%= history.roll_number %>" /> <!-- Roll Number -->
-    <input type="hidden" name="year" value="<%= history.year %>" /> <!-- Year -->
-  
+
+  <form action="/updatestudenthistory/<%= history.roll_number %>" method="POST" class="login-form">
+    <!-- Hidden Inputs for Identifiers -->
+    <input type="hidden" name="year" value="<%= history.year %>" />
+    <input type="hidden" name="month" value="<%= history.month %>" />
+
+    <!-- Editable Fields -->
     <label for="room_no">Room Number:</label>
     <input type="text" id="room_no" name="room_no" value="<%= history.room_no %>" required />
-  
+
     <label for="feepaid">Fee Paid:</label>
     <input type="number" id="feepaid" name="feepaid" value="<%= history.feepaid %>" step="0.01" required />
-  
+
     <label for="feedue">Fee Due:</label>
     <input type="number" id="feedue" name="feedue" value="<%= history.feedue %>" step="0.01" required />
-  
+
     <label for="scholarship">Scholarship:</label>
     <input type="number" id="scholarship" name="scholarship" value="<%= history.scholarship %>" step="0.01" required />
-  
-    <label for="month">Month:</label>
-    <select id="month" name="month" required>
-        <option value="January" <% if (history.month === 'January') { %> selected <% } %>>January</option>
-        <option value="February" <% if (history.month === 'February') { %> selected <% } %>>February</option>
-        <option value="March" <% if (history.month === 'March') { %> selected <% } %>>March</option>
-        <option value="April" <% if (history.month === 'April') { %> selected <% } %>>April</option>
-        <option value="May" <% if (history.month === 'May') { %> selected <% } %>>May</option>
-        <option value="June" <% if (history.month === 'June') { %> selected <% } %>>June</option>
-        <option value="July" <% if (history.month === 'July') { %> selected <% } %>>July</option>
-        <option value="August" <% if (history.month === 'August') { %> selected <% } %>>August</option>
-        <option value="September" <% if (history.month === 'September') { %> selected <% } %>>September</option>
-        <option value="October" <% if (history.month === 'October') { %> selected <% } %>>October</option>
-        <option value="November" <% if (history.month === 'November') { %> selected <% } %>>November</option>
-        <option value="December" <% if (history.month === 'December') { %> selected <% } %>>December</option>
-      </select>
-  
+
     <label for="monthlybill">Monthly Bill:</label>
     <input type="number" id="monthlybill" name="monthlybill" value="<%= history.monthlybill %>" step="0.01" required />
-  
+
     <button type="submit">Update</button>
   </form>
+
   <div class="center-links">
     <a href="/dashboard">Go to Dashboard</a>
   </div>
+</body>
 </html>

@@ -163,31 +163,30 @@
 
     // Filtering functionality
     document.querySelectorAll('.filter-input').forEach((input, index) => {
-      input.addEventListener('input', () => {
-        const filterText = input.value.trim().toLowerCase();
-        const rows = document.querySelectorAll('#data-body tr:not(.totals-row)');
+  input.addEventListener('input', () => {
+    const rows = document.querySelectorAll('#data-body tr:not(.totals-row)');
+    
+    // Gather all filter inputs
+    const filters = Array.from(document.querySelectorAll('.filter-input')).map(input => input.value.trim().toLowerCase());
 
-        rows.forEach(row => {
-          const cell = row.querySelector(`td:nth-child(${index + 1})`);
-          if (!cell) {
-            row.style.display = 'none';
-            return;
+    rows.forEach(row => {
+      // Assume the row matches all filters initially
+      let rowMatches = true;
+
+      filters.forEach((filterText, columnIndex) => {
+        if (filterText) { // Only apply the filter if there's a value
+          const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
+          if (!cell || cell.textContent.trim().toLowerCase() !== filterText) {
+            rowMatches = false; // Row does not match this filter
           }
-
-          const cellText = cell.textContent.trim().toLowerCase();
-
-          if (filterText === '') {
-            row.style.display = '';
-          } else {
-            if (cellText === filterText) {
-              row.style.display = '';
-            } else {
-              row.style.display = 'none';
-            }
-          }
-        });
+        }
       });
+
+      // Set row display based on match status
+      row.style.display = rowMatches ? '' : 'none';
     });
-  </script>
+  });
+});
+ </script>
 </body>
 </html>

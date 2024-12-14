@@ -88,22 +88,29 @@
     });
 
     document.querySelectorAll('.filter-input').forEach((input, index) => {
-      input.addEventListener('input', () => {
-        const filterText = input.value.trim().toLowerCase();
-        const rows = document.querySelectorAll('#data-body tr');
+  input.addEventListener('input', () => {
+    const rows = document.querySelectorAll('#data-body tr');
+    
+    // Collect all filter input values
+    const filters = Array.from(document.querySelectorAll('.filter-input')).map(input => input.value.trim().toLowerCase());
 
-        rows.forEach(row => {
-          const cell = row.querySelector(`td:nth-child(${index + 1})`);
-          if (!cell) {
-            row.style.display = 'none';
-            return;
+    rows.forEach(row => {
+      let rowMatches = true; // Assume the row matches all filters initially
+
+      filters.forEach((filterText, columnIndex) => {
+        if (filterText) { // Apply only non-empty filters
+          const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
+          if (!cell || cell.textContent.trim().toLowerCase() !== filterText) {
+            rowMatches = false; // Row does not match this filter
           }
-
-          const cellText = cell.textContent.trim().toLowerCase();
-          row.style.display = cellText === filterText || filterText === '' ? '' : 'none';
-        });
+        }
       });
+
+      // Show or hide the row based on match status
+      row.style.display = rowMatches ? '' : 'none';
     });
-  </script>
+  });
+});
+ </script>
 </body>
 </html>

@@ -170,13 +170,15 @@
           if (filterText === '') {
             row.style.display = '';
           } else {
-            const header = document.querySelectorAll('.sortable')[index];
-            if (header.dataset.column === 'scholarship') {
-              row.style.display = cellText === filterText ? '' : 'none';
-            } else {
-              row.style.display = cellText.includes(filterText) ? '' : 'none';
-            }
-          }
+        const header = document.querySelectorAll('.sortable')[index];
+        
+        // Apply exact match for 'scholarship' and all other columns
+        if (cellText === filterText) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      }
         });
       });
     });

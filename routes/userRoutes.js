@@ -279,8 +279,6 @@ router.get('/studenthistory/:rollNumber', (req, res) => {
   });
 });
 
-
-
 // Route to view all students' history (Admin )
 router.get('/viewallstudentshistory', (req, res) => {
   // Query to fetch all student history

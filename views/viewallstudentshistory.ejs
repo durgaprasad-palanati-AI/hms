@@ -137,30 +137,36 @@
     // Filtering functionality
     document.querySelectorAll('.filter-input').forEach((input, index) => {
     input.addEventListener('input', () => {
-    const filters = Array.from(document.querySelectorAll('.filter-input')).map(input => input.value.trim().toLowerCase());
-    const rows = document.querySelectorAll('#data-body tr');
-    
-    rows.forEach(row => {
-    let isVisible = true;
-    
-    filters.forEach((filterText, i) => {
-    const cell = row.querySelector(`td:nth-child(${i + 1})`);
-    if (!cell) {
-    isVisible = false;
-    return;
-    }
-    
-    const cellText = cell.textContent.trim().toLowerCase();
-    
-    if (filterText !== '' && !cellText.includes(filterText)) {
-    isVisible = false;
-    }
+      const filterText = input.value.trim().toLowerCase();
+      const rows = document.querySelectorAll('#data-body tr');
+
+      // Split the input into multiple filter values (by commas)
+      const filterValues = filterText.split(',').map(val => val.trim()).filter(val => val !== '');
+
+      rows.forEach(row => {
+        const cell = row.querySelector(`td:nth-child(${index + 1})`);
+        if (!cell) {
+          row.style.display = 'none';
+          return;
+        }
+
+        const cellText = cell.textContent.trim().toLowerCase();
+
+        if (filterValues.length === 0) {
+          row.style.display = '';
+        } else {
+        const header = document.querySelectorAll('.sortable')[index];
+        
+        // Apply exact match for 'scholarship' and all other columns
+        if (cellText === filterText) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      }
+      });
     });
-    
-    row.style.display = isVisible ? '' : 'none';
-    });
-    });
-    });
+  });
     </script>
     
   

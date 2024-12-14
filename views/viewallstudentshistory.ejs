@@ -2,40 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+  <style>
+    .filter-input {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 5px;
+      box-sizing: border-box;
+    }
+    .sortable:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <header>
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
     <h3 class="header">
       <% if (user && user.name) { %>
-     <span>You are logged in as <%= user.name %></span>
-       <% } %>
-       <a href="/logout" class="right-link">Logout</a>
-     </h3>
-     <h1>All students history</h1>
+        <span>You are logged in as <%= user.name %></span>
+      <% } %>
+      <a href="/logout" class="right-link">Logout</a>
+    </h3>
+    <h1>All Students History</h1>
   </header>
-<table class="data-table">
+
+  <table class="data-table">
     <thead>
       <tr>
-        <th>Roll Number</th>
-        <th>Room No</th>
-        <th>Fee Paid</th>
-        <th>Fee Due</th>
-        <th>Month</th>
-        <th>Monthly Bill</th>
-        <th>Scholarship</th>
+        <th class="sortable" data-column="roll_number">Roll Number</th>
+        <th class="sortable" data-column="room_no">Room No</th>
+        <th class="sortable" data-column="feepaid">Fee Paid</th>
+        <th class="sortable" data-column="feedue">Fee Due</th>
+        <th class="sortable" data-column="month">Month</th>
+        <th class="sortable" data-column="year">Year</th>
+        <th class="sortable" data-column="monthlybill">Monthly Bill</th>
+        <th class="sortable" data-column="scholarship">Scholarship</th>
         <% if (user && user.is_admin) { %>
           <th>Edit</th>
         <% } %>
       </tr>
+      <tr>
+        <th><input type="text" class="filter-input" placeholder="Filter Roll Number"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Room No"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Fee Paid"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Fee Due"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Month"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Year"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Monthly Bill"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Scholarship"></th>
+        <% if (user && user.is_admin) { %>
+          <th></th>
+        <% } %>
+      </tr>
     </thead>
-    <tbody>
+    <tbody id="data-body">
       <% if (!history || history.length === 0) { %>
         <tr>
-          <td colspan="8">No history found.</td>
+          <td colspan="<%= user && user.is_admin ? 8 : 7 %>">No history found.</td>
         </tr>
       <% } else { %>
         <% history.forEach(item => { %>
@@ -45,12 +72,12 @@
             <td><%= item.feepaid %></td>
             <td><%= item.feedue %></td>
             <td><%= item.month %></td>
+            <td><%= item.year %></td>
             <td><%= item.monthlybill %></td>
             <td><%= item.scholarship %></td>
             <% if (user && user.is_admin) { %>
               <td>
-                <a href="/updatestudenthistory/<%= item.roll_number %>?month=<%= item.month %>&year=<%= item.year %>">Edit
-                </a>
+                <a href="/updatestudenthistory/<%= item.roll_number %>?month=<%= item.month %>&year=<%= item.year %>">Edit</a>
               </td>
             <% } %>
           </tr>
@@ -58,8 +85,121 @@
       <% } %>
     </tbody>
   </table>
+
   <div class="center-links">
     <a href="/dashboard">Go to Dashboard</a>
   </div>
-  </html>
- 
+
+  <script>
+    // Function to update totals based on filtered rows
+    function updateTotals() {
+      let totalFeePaid = 0;
+      let totalFeeDue = 0;
+      let totalMonthlyBill = 0;
+      let totalScholarship = 0;
+      const rows = document.querySelectorAll('#data-body tr');
+  
+      rows.forEach(row => {
+        if (row.style.display !== 'none') {
+          const feePaid = parseFloat(row.cells[2].textContent.trim()) || 0;
+          const feeDue = parseFloat(row.cells[3].textContent.trim()) || 0;
+          const monthlyBill = parseFloat(row.cells[6].textContent.trim()) || 0;
+          const scholarship = parseFloat(row.cells[7].textContent.trim()) || 0;
+  
+          totalFeePaid += feePaid;
+          totalFeeDue += feeDue;
+          totalMonthlyBill += monthlyBill;
+          totalScholarship += scholarship;
+        }
+      });
+  
+      // Update the total values in the footer (or anywhere in the page)
+      document.querySelector('#total-feepaid').textContent = totalFeePaid.toFixed(2);
+      document.querySelector('#total-feedue').textContent = totalFeeDue.toFixed(2);
+      document.querySelector('#total-monthlybill').textContent = totalMonthlyBill.toFixed(2);
+      document.querySelector('#total-scholarship').textContent = totalScholarship.toFixed(2);
+    }
+  
+    // Sorting functionality (same as before)
+    document.querySelectorAll('.sortable').forEach(header => {
+      header.addEventListener('click', () => {
+        const column = header.dataset.column;
+        const isNumeric = ['feepaid', 'feedue', 'monthlybill', 'scholarship', 'year'].includes(column);
+        const isMonth = column === 'month';
+        const rows = Array.from(document.querySelectorAll('#data-body tr')).filter(row => row.style.display !== 'none');
+  
+        // Month order mapping
+        const monthOrder = [
+          'january', 'february', 'march', 'april', 'may', 'june',
+          'july', 'august', 'september', 'october', 'november', 'december'
+        ];
+  
+        const sortedRows = rows.sort((a, b) => {
+          const aCell = a.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim().toLowerCase();
+          const bCell = b.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim().toLowerCase();
+  
+          if (isNumeric) {
+            return parseFloat(aCell) - parseFloat(bCell);
+          } else if (isMonth) {
+            // Compare using month order
+            return monthOrder.indexOf(aCell) - monthOrder.indexOf(bCell);
+          } else {
+            return aCell.localeCompare(bCell, undefined, { numeric: true });
+          }
+        });
+  
+        // Toggle sort direction
+        if (header.classList.contains('asc')) {
+          sortedRows.reverse();
+          header.classList.remove('asc');
+          header.classList.add('desc');
+        } else {
+          header.classList.remove('desc');
+          header.classList.add('asc');
+        }
+  
+        document.querySelector('#data-body').innerHTML = '';
+        document.querySelector('#data-body').append(...sortedRows);
+  
+        // Recalculate totals after sorting
+        updateTotals();
+      });
+    });
+  
+    // Filtering functionality (updated to call updateTotals after filtering)
+    document.querySelectorAll('.filter-input').forEach((input, index) => {
+      input.addEventListener('input', () => {
+        const filters = Array.from(document.querySelectorAll('.filter-input')).map(input => input.value.trim().toLowerCase());
+        const rows = document.querySelectorAll('#data-body tr');
+  
+        rows.forEach(row => {
+          let isVisible = true;
+  
+          filters.forEach((filterText, i) => {
+            const cell = row.querySelector(`td:nth-child(${i + 1})`);
+            if (!cell) {
+              isVisible = false;
+              return;
+            }
+  
+            const cellText = cell.textContent.trim().toLowerCase();
+  
+            if (filterText !== '' && !cellText.includes(filterText)) {
+              isVisible = false;
+            }
+          });
+  
+          row.style.display = isVisible ? '' : 'none';
+        });
+  
+        // Recalculate totals after filtering
+        updateTotals();
+      });
+    });
+  
+    // Call the updateTotals function when the page loads to initialize the totals
+    document.addEventListener('DOMContentLoaded', updateTotals);
+  </script>  
+
+</body>
+</html>

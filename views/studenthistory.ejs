@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Student History</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+  <style>
+    .filter-input {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 5px;
+      box-sizing: border-box;
+    }
+    .sortable:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -20,19 +32,33 @@
   <table class="data-table">
     <thead>
       <tr>
-        <th>Roll Number</th>
-        <th>Room No</th>
-        <th>Fee Paid</th>
-        <th>Fee Due</th>
-        <th>Month</th>
-        <th>Monthly Bill</th>
-        <th>Scholarship</th>
+        <th class="sortable" data-column="roll_number">Roll Number</th>
+        <th class="sortable" data-column="room_no">Room No</th>
+        <th class="sortable" data-column="feepaid">Fee Paid</th>
+        <th class="sortable" data-column="feedue">Fee Due</th>
+        <th class="sortable" data-column="month">Month</th>
+        <th class="sortable" data-column="year">Year</th>
+        <th class="sortable" data-column="monthlybill">Monthly Bill</th>
+        <th class="sortable" data-column="scholarship">Scholarship</th>
         <% if (user && user.is_admin) { %>
           <th>Edit</th>
         <% } %>
       </tr>
+      <tr>
+        <th><input type="text" class="filter-input" placeholder="Filter Roll Number"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Room No"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Fee Paid"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Fee Due"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Month"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Year"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Monthly Bill"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Scholarship"></th>
+        <% if (user && user.is_admin) { %>
+          <th></th>
+        <% } %>
+      </tr>
     </thead>
-    <tbody>
+    <tbody id="data-body">
       <% if (!history || history.length === 0) { %>
         <tr>
           <td colspan="<%= user && user.is_admin ? 8 : 7 %>">No history found for this student.</td>
@@ -48,6 +74,7 @@
             <td><%= item.feepaid %></td>
             <td><%= item.feedue %></td>
             <td><%= item.month %></td>
+            <td><%= item.year %></td>
             <td><%= item.monthlybill %></td>
             <td><%= item.scholarship %></td>
             <% if (user && user.is_admin) { %>
@@ -59,6 +86,19 @@
             <% } %>
           </tr>
         <% }) %>
+        <!-- Totals Row -->
+        <tr>
+          <td colspan="2"><strong>Total</strong></td>
+          <td><%= totals.feepaid %></td>
+          <td><%= totals.feedue %></td>
+          <td>-</td>
+          <td>-</td>
+          <td><%= totals.monthlybill %></td>
+          <td><%= totals.scholarship %></td>
+          <% if (user && user.is_admin) { %>
+            <td>-</td>
+          <% } %>
+        </tr>
       <% } %>
     </tbody>
   </table>
@@ -69,5 +109,77 @@
     <% } %>
     <a href="/dashboard">Go to Dashboard</a>
   </div>
+
+  <script>
+    // Sorting functionality
+    document.querySelectorAll('.sortable').forEach(header => {
+      header.addEventListener('click', () => {
+        const column = header.dataset.column;
+        const isNumeric = ['feepaid', 'feedue', 'monthlybill', 'scholarship','year'].includes(column);
+        const isMonth = column === 'month';
+        const rows = Array.from(document.querySelectorAll('#data-body tr')).filter(row => row.style.display !== 'none');
+
+        // Month order mapping
+        const monthOrder = [
+          'january', 'february', 'march', 'april', 'may', 'june',
+          'july', 'august', 'september', 'october', 'november', 'december'
+        ];
+
+        const sortedRows = rows.sort((a, b) => {
+          const aCell = a.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim().toLowerCase();
+          const bCell = b.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim().toLowerCase();
+
+          if (isNumeric) {
+            return parseFloat(aCell) - parseFloat(bCell);
+          } else if (isMonth) {
+            return monthOrder.indexOf(aCell) - monthOrder.indexOf(bCell);
+          } else {
+            return aCell.localeCompare(bCell, undefined, { numeric: true });
+          }
+        });
+
+        if (header.classList.contains('asc')) {
+          sortedRows.reverse();
+          header.classList.remove('asc');
+          header.classList.add('desc');
+        } else {
+          header.classList.remove('desc');
+          header.classList.add('asc');
+        }
+
+        document.querySelector('#data-body').innerHTML = '';
+        document.querySelector('#data-body').append(...sortedRows);
+      });
+    });
+
+    // Filtering functionality
+    document.querySelectorAll('.filter-input').forEach((input, index) => {
+      input.addEventListener('input', () => {
+        const filterText = input.value.trim().toLowerCase();
+        const rows = document.querySelectorAll('#data-body tr');
+
+        rows.forEach(row => {
+          const cell = row.querySelector(`td:nth-child(${index + 1})`);
+          if (!cell) {
+            row.style.display = 'none';
+            return;
+          }
+
+          const cellText = cell.textContent.trim().toLowerCase();
+
+          if (filterText === '') {
+            row.style.display = '';
+          } else {
+            const header = document.querySelectorAll('.sortable')[index];
+            if (header.dataset.column === 'scholarship') {
+              row.style.display = cellText === filterText ? '' : 'none';
+            } else {
+              row.style.display = cellText.includes(filterText) ? '' : 'none';
+            }
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>

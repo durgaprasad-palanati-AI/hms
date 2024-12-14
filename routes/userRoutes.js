@@ -235,14 +235,23 @@ router.get('/studenthistory', (req, res) => {
       return res.status(500).send('Error fetching student history');
     }
 
+    // Compute totals
+    const totals = {
+      feepaid: results.reduce((sum, item) => sum + item.feepaid, 0),
+      feedue: results.reduce((sum, item) => sum + (item.monthlybill - item.feepaid - item.scholarship), 0),
+      monthlybill: results.reduce((sum, item) => sum + item.monthlybill, 0),
+      scholarship: results.reduce((sum, item) => sum + item.scholarship, 0),
+    };
+
     res.render('studenthistory', {
       history: results,
       roll_number: rollNumber,
+      totals, // Pass totals to the template
       user: req.session.user,
     });
   });
 });
-//
+
 router.get('/studenthistory/:rollNumber', (req, res) => {
   const rollNumber = req.params.rollNumber;
 
@@ -252,9 +261,24 @@ router.get('/studenthistory/:rollNumber', (req, res) => {
       console.error('Error fetching student history:', err);
       return res.status(500).send('Error fetching student history');
     }
-    res.render('studenthistory', { history: results, roll_number: rollNumber });
+
+    // Compute totals
+    const totals = {
+      feepaid: results.reduce((sum, item) => sum + item.feepaid, 0),
+      feedue: results.reduce((sum, item) => sum + (item.monthlybill - item.feepaid - item.scholarship), 0),
+      monthlybill: results.reduce((sum, item) => sum + item.monthlybill, 0),
+      scholarship: results.reduce((sum, item) => sum + item.scholarship, 0),
+    };
+
+    res.render('studenthistory', {
+      history: results,
+      roll_number: rollNumber,
+      totals, // Pass totals to the template
+      user: req.session.user,
+    });
   });
 });
+
 
 
 // Route to view all students' history (Admin )

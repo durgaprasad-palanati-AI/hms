@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+
 </head>
 <body>
   <header>
@@ -28,5 +29,22 @@
       <button type="submit" class="btn">View Student History</button>
     </div>
   </form>
+
+  <!-- Floating Menu Section -->
+  <div class="floating-menu">
+    <h3>Quick Menu</h3>
+    <div class="menu-item">
+      <a href="/dues">DUES</a>
+      <br>
+      <a href="/scholarships">SCHOLARSHIPS</a>
+    </div>
+    <div class="menu-item">
+      <a href="#">APPLICATIONS</a>
+      <div class="submenu">
+        <a href="/applications/all">All Applications</a>
+        <a href="/applications/pending">Pending Applications</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

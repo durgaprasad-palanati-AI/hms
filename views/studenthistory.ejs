@@ -87,7 +87,7 @@
           </tr>
         <% }) %>
         <!-- Totals Row -->
-        <tr>
+        <tr class="totals-row">
           <td colspan="2"><strong>Total</strong></td>
           <td><%= totals.feepaid %></td>
           <td><%= totals.feedue %></td>
@@ -115,9 +115,11 @@
     document.querySelectorAll('.sortable').forEach(header => {
       header.addEventListener('click', () => {
         const column = header.dataset.column;
-        const isNumeric = ['feepaid', 'feedue', 'monthlybill', 'scholarship','year'].includes(column);
+        const isNumeric = ['feepaid', 'feedue', 'monthlybill', 'scholarship', 'year'].includes(column);
         const isMonth = column === 'month';
-        const rows = Array.from(document.querySelectorAll('#data-body tr')).filter(row => row.style.display !== 'none');
+        const rows = Array.from(document.querySelectorAll('#data-body tr:not(.totals-row)')).filter(
+          row => row.style.display !== 'none'
+        );
 
         // Month order mapping
         const monthOrder = [
@@ -147,8 +149,15 @@
           header.classList.add('asc');
         }
 
+        // Re-append sorted rows to the table body
         document.querySelector('#data-body').innerHTML = '';
         document.querySelector('#data-body').append(...sortedRows);
+
+        // Re-append the totals row
+        const totalsRow = document.querySelector('.totals-row');
+        if (totalsRow) {
+          document.querySelector('#data-body').appendChild(totalsRow);
+        }
       });
     });
 
@@ -156,7 +165,7 @@
     document.querySelectorAll('.filter-input').forEach((input, index) => {
       input.addEventListener('input', () => {
         const filterText = input.value.trim().toLowerCase();
-        const rows = document.querySelectorAll('#data-body tr');
+        const rows = document.querySelectorAll('#data-body tr:not(.totals-row)');
 
         rows.forEach(row => {
           const cell = row.querySelector(`td:nth-child(${index + 1})`);
@@ -170,15 +179,12 @@
           if (filterText === '') {
             row.style.display = '';
           } else {
-        const header = document.querySelectorAll('.sortable')[index];
-        
-        // Apply exact match for 'scholarship' and all other columns
-        if (cellText === filterText) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
-      }
+            if (cellText === filterText) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          }
         });
       });
     });

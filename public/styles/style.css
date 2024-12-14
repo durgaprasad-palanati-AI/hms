@@ -352,3 +352,94 @@ button:hover {
   text-align: center;
   margin-bottom: 20px;
 }
+    /* Additional Styles for Floating Menu */
+    .floating-menu {
+      position: fixed;
+      top: 150px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+    .floating-menu h3 {
+      margin-top: 0;
+    }
+    .menu-item {
+      margin: 10px 0;
+    }
+    .submenu {
+      margin-top: 5px;
+      padding-left: 15px;
+    }
+    .submenu a {
+      display: block;
+      text-decoration: none;
+      color: white;
+      margin: 5px 0;
+      transition: background-color 0.3s ease;
+    }
+    .submenu a:hover {
+      background-color: #45a049;
+    }
+    .floating-menu a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+    .floating-menu a:hover {
+      text-decoration: underline;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+   
+    .right-link {
+      color:  #007bff;
+      text-decoration: none;
+    }
+    .right-link:hover {
+      text-decoration: underline;
+    }
+    .filter-input {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 5px;
+      box-sizing: border-box;
+    }
+    .sortable {
+      cursor: pointer;
+      position: relative;
+      padding-right: 20px;
+    }
+    .sortable:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    /* Default arrows for all sortable headers */
+    .sortable::after {
+      content: '▲▼'; /* Both arrows visible by default */
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: lightgray; /* Default color for inactive state */
+    }
+  
+    /* Highlight the ascending state */
+    .sortable.asc::after {
+      content: '▲▼';
+      color: black; /* Active color for ascending */
+      font-weight: bold;
+    }
+  
+    /* Highlight the descending state */
+    .sortable.desc::after {
+      content: '▲▼';
+      color: black; /* Active color for descending */
+      font-weight: bold;
+    }

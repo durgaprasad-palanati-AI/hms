@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+ 
+  
+</head>
+<body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+        <span>You are logged in as <%= user.name %></span>
+      <% } %>
+      <a href="/logout" class="right-link">Logout</a>
+    </h3>
+  </header>
+  <header>
+    <h1>Dues Summary</h1>
+  </header>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <!-- Add class "sortable" for sorting and data-column attribute for column identification -->
+        <th class="sortable" data-column="roll_number">Roll Number</th>
+        <th class="sortable" data-column="year">Year</th>
+        <th class="sortable" data-column="total_due">Total Due (₹)</th>
+      </tr>
+      <tr>
+        <!-- Add filter inputs -->
+        <th><input type="text" class="filter-input" placeholder="Filter Roll Number"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Year"></th>
+        <th><input type="text" class="filter-input" placeholder="Filter Total Due"></th>
+      </tr>
+    </thead>
+    <tbody id="data-body">
+      <% if (dues.length > 0) { %>
+        <% dues.forEach(due => { %>
+          <tr>
+            <td><%= due.roll_number %></td>
+            <td><%= due.year %></td>
+            <td><%= due.total_due %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="3">No dues found</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <div class="center-links">
+    <a href="/dashboard">Go to Dashboard</a>
+  </div>
+
+  <script>
+    // Sorting functionality
+    document.querySelectorAll('.sortable').forEach(header => {
+  header.addEventListener('click', () => {
+    const column = header.dataset.column;
+    const isNumeric = ['total_due', 'year'].includes(column);
+    const rows = Array.from(document.querySelectorAll('#data-body tr')).filter(row => row.style.display !== 'none');
+
+    // Sort rows based on column data
+    const sortedRows = rows.sort((a, b) => {
+      const aCell = a.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim();
+      const bCell = b.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim();
+
+      if (isNumeric) {
+        return parseFloat(aCell) - parseFloat(bCell);
+      } else {
+        return aCell.localeCompare(bCell, undefined, { numeric: true });
+      }
+    });
+
+    // Toggle sort direction
+    if (header.classList.contains('asc')) {
+      sortedRows.reverse();
+      header.classList.remove('asc');
+      header.classList.add('desc');
+    } else {
+      header.classList.remove('desc');
+      header.classList.add('asc');
+    }
+
+    // Reset other headers' sorting state
+    document.querySelectorAll('.sortable').forEach(h => {
+      if (h !== header) h.classList.remove('asc', 'desc');
+    });
+
+    // Append sorted rows to the table body
+    document.querySelector('#data-body').innerHTML = '';
+    document.querySelector('#data-body').append(...sortedRows);
+  });
+});
+
+    // Filtering functionality
+    document.querySelectorAll('.filter-input').forEach((input, index) => {
+      input.addEventListener('input', () => {
+        const filterText = input.value.trim().toLowerCase();
+        const rows = document.querySelectorAll('#data-body tr');
+
+        rows.forEach(row => {
+          const cell = row.querySelector(`td:nth-child(${index + 1})`);
+          if (!cell) {
+            row.style.display = 'none';
+            return;
+          }
+
+          const cellText = cell.textContent.trim().toLowerCase();
+          row.style.display = cellText === filterText || filterText === '' ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -395,6 +395,60 @@ router.post('/updatestudenthistory/:roll_number', (req, res) => {
   });
 });
 
+// Route to fetch dues grouped by roll_number and year
+router.get('/dues', (req, res) => {
+  // SQL query to calculate dues
+  const query = `
+    SELECT 
+      roll_number, 
+      year,
+      SUM(monthlybill - feepaid - scholarship) AS total_due
+    FROM 
+      studenthistory
+    GROUP BY 
+      roll_number, year
+    ORDER BY 
+      roll_number, year;
+  `;
+
+  // Execute the query
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching dues:', err);
+      return res.status(500).send('Error fetching dues');
+    }
+
+    // Render the dues page
+    res.render('dues', { dues: results, user: req.session.user });
+  });
+});
+
+router.get('/scholarships', (req, res) => {
+  // SQL query to calculate scholarships
+  const query = `
+    SELECT 
+      roll_number, 
+      year,
+      SUM(scholarship) AS total_scholarship
+    FROM 
+      studenthistory
+    GROUP BY 
+      roll_number, year
+    ORDER BY 
+      roll_number, year;
+  `;
+
+  // Execute the query
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching scholarships:', err);
+      return res.status(500).send('Error fetching scholarships');
+    }
+
+    // Render the scholarship summary page
+    res.render('scholarships', { scholarships: results, user: req.session.user });
+  });
+});
 
 // Logout Route
 

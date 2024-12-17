@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostel Applications</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
+<body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3 class="header">
+      <% if (user && user.name) { %>
+        <span>You are logged in as <%= user.name %></span>
+      <% } %>
+      <a href="/logout" class="right-link">Logout</a>
+    </h3>
+  </header>
+
+  <header>
+    <h1>Hostel Applications</h1>
+  </header>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <% if (applications.length > 0) { %>
+          <% Object.keys(applications[0]).forEach(column => { %>
+            <th><%= column.replace(/_/g, ' ').toUpperCase() %></th>
+          <% }) %>
+        <% } %>
+      </tr>
+    </thead>
+    <tbody id="data-body">
+      <% if (applications.length > 0) { %>
+        <% applications.forEach(application => { %>
+          <tr>
+            <% Object.values(application).forEach(value => { %>
+              <td><%= value %></td>
+             
+            <% }) %>
+            
+            <td>
+              <a href="/approval">APPROVAL</a>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="100%">No applications found</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <div class="center-links">
+    <a href="/dashboard">Go to Dashboard</a>
+  </div>
+
+</body>
+</html>

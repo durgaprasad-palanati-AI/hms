@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Student History</title>
+  <title>Student History</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
   <style>
     .filter-input {
@@ -12,9 +12,28 @@
       margin-bottom: 5px;
       box-sizing: border-box;
     }
+
     .sortable:hover {
       cursor: pointer;
       text-decoration: underline;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .data-table, .data-table * {
+        visibility: visible;
+      }
+      .sortable {
+        text-decoration: none; /* Hide sorting arrows */
+      }
+      .data-table {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -29,6 +48,7 @@
     </h3>
     <h1>History</h1>
   </header>
+
   <table class="data-table">
     <thead>
       <tr>
@@ -102,12 +122,19 @@
       <% } %>
     </tbody>
   </table>
+
   <br>
+
   <div class="center-links">
     <% if (user && user.is_admin) { %>
       <a href="/enterstudenthistory/<%= roll_number %>">Add new history</a>
     <% } %>
     <a href="/dashboard">Go to Dashboard</a>
+  </div>
+
+  <!-- Print Link -->
+  <div class="center-links">
+    <a href="#" onclick="printTable()">Print</a>
   </div>
 
   <script>
@@ -163,30 +190,35 @@
 
     // Filtering functionality
     document.querySelectorAll('.filter-input').forEach((input, index) => {
-  input.addEventListener('input', () => {
-    const rows = document.querySelectorAll('#data-body tr:not(.totals-row)');
-    
-    // Gather all filter inputs
-    const filters = Array.from(document.querySelectorAll('.filter-input')).map(input => input.value.trim().toLowerCase());
+      input.addEventListener('input', () => {
+        const rows = document.querySelectorAll('#data-body tr:not(.totals-row)');
+        
+        // Gather all filter inputs
+        const filters = Array.from(document.querySelectorAll('.filter-input')).map(input => input.value.trim().toLowerCase());
 
-    rows.forEach(row => {
-      // Assume the row matches all filters initially
-      let rowMatches = true;
+        rows.forEach(row => {
+          // Assume the row matches all filters initially
+          let rowMatches = true;
 
-      filters.forEach((filterText, columnIndex) => {
-        if (filterText) { // Only apply the filter if there's a value
-          const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
-          if (!cell || cell.textContent.trim().toLowerCase() !== filterText) {
-            rowMatches = false; // Row does not match this filter
-          }
-        }
+          filters.forEach((filterText, columnIndex) => {
+            if (filterText) { // Only apply the filter if there's a value
+              const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
+              if (!cell || cell.textContent.trim().toLowerCase() !== filterText) {
+                rowMatches = false; // Row does not match this filter
+              }
+            }
+          });
+
+          // Set row display based on match status
+          row.style.display = rowMatches ? '' : 'none';
+        });
       });
-
-      // Set row display based on match status
-      row.style.display = rowMatches ? '' : 'none';
     });
-  });
-});
- </script>
+
+    // Print table function
+    function printTable() {
+      window.print();
+    }
+  </script>
 </body>
 </html>

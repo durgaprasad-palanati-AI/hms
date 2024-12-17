@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Approval of Applications</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+</head>
+<body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h1>Approval of Hostel Applications</h1>
+  </header>
+
+  <form action="/approval/submit" method="POST" class="login-form">
+    <table border="1">
+      <thead>
+        <tr>
+          <% if (applications.length > 0) { %>
+            <% Object.keys(applications[0]).forEach(column => { %>
+              <th><%= column.replace(/_/g, ' ').toUpperCase() %></th>
+            <% }) %>
+            <!-- Add Approve column header -->
+            <th>Approve</th>
+          <% } %>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (applications.length > 0) { %>
+          <% applications.forEach(application => { %>
+            <tr>
+              <% Object.values(application).forEach(value => { %>
+                <td><%= value %></td>
+              <% }) %>
+              <!-- Add dropdown for Approve column -->
+              <td>
+                <select name="approve_<%= application.application_number %>" id="approve_<%= application.application_number %>">
+                  <option value="yes" <%= application.approval_status === 'yes' ? 'selected' : '' %>>Yes</option>
+                  <option value="no" <%= application.approval_status === 'no' ? 'selected' : '' %>>No</option>
+                </select>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="100%">No applications found</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <div class="center-links">
+      <button type="submit">Submit Approvals</button>
+    </div>
+  </form>
+
+  <div class="center-links">
+    <a href="/dashboard">Go to Dashboard</a>
+  </div>
+
+</body>
+</html>

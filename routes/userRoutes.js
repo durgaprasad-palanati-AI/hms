@@ -449,6 +449,198 @@ router.get('/scholarships', (req, res) => {
     res.render('scholarships', { scholarships: results, user: req.session.user });
   });
 });
+//get application forms
+router.get('/applications', (req, res) => {
+  // SQL query to fetch all applications
+  const query = `
+    SELECT * FROM hostel_applicationform
+    ORDER BY id ASC;
+  `;
+
+  // Execute the query
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching applications:', err);
+      return res.status(500).send('Error fetching applications');
+    }
+
+    // Render the applications page
+    res.render('applications', { applications: results, user: req.session.user });
+  });
+});
+// apply for hostel
+// Route to render the application form
+
+router.get('/apply', (req, res) => {
+  res.render('apply', { user: req.session.user, error: null });
+});
+
+// Route to check Aadhaar number existence
+router.post('/apply/check-aadhaar', (req, res) => {
+  const { student_aadhaar_no } = req.body;
+
+  if (student_aadhaar_no.length !== 12) {
+    return res.status(400).json({ error: 'Aadhaar number must be 12 digits long' });
+  }
+
+  const checkQuery = 'SELECT COUNT(*) AS count FROM hostel_applicationform WHERE student_aadhaar_no = ?';
+
+  db.query(checkQuery, [student_aadhaar_no], (err, results) => {
+    if (err) {
+      console.error('Error checking Aadhaar number:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (results[0].count > 0) {
+      return res.status(409).json({ error: 'Aadhaar number already exists' });
+    }
+
+    res.status(200).json({ message: 'Aadhaar number is valid and unique' });
+  });
+});
+
+// Route to handle form submission
+
+router.post('/apply/submit', (req, res) => {
+  const {
+    roll_number,
+    full_name,
+    fathers_guardians_name,
+    profession_of_father_guardian,
+    annual_income_father_guardian,
+    mobile_no,
+    place_of_birth,
+    distance_from_residence_to_college,
+    student_aadhaar_no,
+    address_line1,
+    address_line2,
+    city,
+    district,
+    state,
+    country,
+    pincode,
+    contact_number,
+    email_id,
+    course,
+    place_of_study,
+    study_period,
+    education_details_vi_to_xth,
+    education_details_intermediate,
+    nationality,
+    category,
+    sub_caste,
+    food_preference,
+    application_type,
+  } = req.body;
+
+  const insertApplicationFormQuery = `
+    INSERT INTO hostel_applicationform (
+      roll_number, full_name, fathers_guardians_name, profession_of_father_guardian, annual_income_father_guardian,
+      mobile_no, place_of_birth, distance_from_residence_to_college, student_aadhaar_no, address_line1,
+      address_line2, city, district, state, country, pincode, contact_number, email_id, course, place_of_study,
+      study_period, education_details_vi_to_xth, education_details_intermediate, nationality, category,
+      sub_caste, food_preference, application_type
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+  `;
+
+  const insertApplicationsQuery = `
+    INSERT INTO applications (roll_number) VALUES (?);
+  `;
+
+  // Insert data into hostel_applicationform table
+  db.query(
+    insertApplicationFormQuery,
+    [
+      roll_number,
+      full_name,
+      fathers_guardians_name,
+      profession_of_father_guardian,
+      annual_income_father_guardian,
+      mobile_no,
+      place_of_birth,
+      distance_from_residence_to_college,
+      student_aadhaar_no,
+      address_line1,
+      address_line2,
+      city,
+      district,
+      state,
+      country,
+      pincode,
+      contact_number,
+      email_id,
+      course,
+      place_of_study,
+      study_period,
+      education_details_vi_to_xth,
+      education_details_intermediate,
+      nationality,
+      category,
+      sub_caste,
+      food_preference,
+      application_type,
+    ],
+    (err) => {
+      if (err) {
+        console.error('Error inserting application data:', err);
+        return res.status(500).send('Error submitting application');
+      }
+
+      // Insert roll_number into applications table
+      db.query(insertApplicationsQuery, [roll_number], (err, result) => {
+        if (err) {
+          console.error('Error inserting roll_number into applications:', err);
+          return res.status(500).send('Error processing application');
+        }
+
+        // Fetch the generated application_number
+        const applicationNumber = result.insertId;
+
+        // Render the success page with the application number
+        res.render('application-success', { applicationNumber });
+      });
+    }
+  );
+});
+//approval of applications
+// Route to display applications with a dropdown to approve or reject
+router.get('/approval', (req, res) => {
+  const query = 'SELECT * FROM applications'; // Assuming you're fetching data from `hostel_applicationform`
+  db.query(query, (err, applications) => {
+    if (err) {
+      console.error('Error fetching applications:', err);
+      return res.status(500).send('Error fetching applications');
+    }
+    res.render('approval', { applications });
+  });
+});
+//
+// Route to handle the submission of approval status
+router.post('/approval/submit', (req, res) => {
+  const approvalData = req.body; // Contains the approval status for each application
+
+  // Iterate through the approval data and update each application's approval status
+  for (let key in approvalData) {
+    const applicationNumber = key.split('_')[1]; // Extract application_number from the key
+    const approvalStatus = approvalData[key]; // Get the approval value ('yes' or 'no')
+
+    // Update the approval status in the database for the corresponding application
+    const updateQuery = `
+      UPDATE applications
+      SET Approved = ?
+      WHERE application_number = ?;
+    `;
+
+    db.query(updateQuery, [approvalStatus, applicationNumber], (err) => {
+      if (err) {
+        console.error('Error updating approval status:', err);
+        return res.status(500).send('Error updating approval status');
+      }
+    });
+  }
+
+  res.redirect('/approval'); // Redirect to the approval page after processing
+});
 
 // Logout Route
 

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
-
 </head>
 <body>
   <header>
@@ -19,15 +18,24 @@
   </header>
 
   <h1>Admin Dashboard</h1>
- 
+  
+  <!-- Display error message if present -->
+  
   <form action="/studenthistory" method="GET" class="login-form">
     <div class="center-links">
       <a href="/viewallstudentshistory" class="action-link">View All Students History</a>
       <p>OR</p>
       <label for="rollNumber">Enter Student Roll Number:</label>
       <input type="text" name="rollNumber" id="rollNumber" placeholder="Roll Number" required>
+      <% if (errorMessage) { %>
+        <div class="error-message">
+          <p><%= errorMessage %></p>
+        </div>
+      <% } %>
       <button type="submit" class="btn">View Student History</button>
     </div>
+  
+  
   </form>
 
   <!-- Floating Menu Section -->

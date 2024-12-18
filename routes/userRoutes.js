@@ -13,6 +13,7 @@ router.get('/register', (req, res) => {
 });
 
 // Route: Handle Registration
+
 router.post('/register', async (req, res) => {
   const { name, password, confirm_password, roll_number } = req.body;
 
@@ -26,26 +27,41 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Insert user into the database
-    const user = { name, password: hashedPassword, roll_number };
-    db.query('INSERT INTO users SET ?', user, (err, results) => {
+    // Check if the roll number exists in the `applications` table with `Approved='yes'`
+    const query = `SELECT * FROM applications WHERE roll_number = ? AND Approved = 'yes'`;
+    db.query(query, [roll_number], async (err, results) => {
       if (err) {
-        console.error('Error inserting user into the database:', err);
+        console.error('Error checking roll number in applications table:', err);
         return res.status(500).send('Error during registration');
       }
 
-      // Redirect to login page after successful registration
-      // Render success message after registration
-      res.render('register-success'); // Render the success page
+      if (results.length === 0) {
+        // Render success page with a flag indicating registration failure
+        return res.render('register-success', { approved: false });
+      }
+
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insert user into the `users` table
+      const user = { name, password: hashedPassword, roll_number };
+      db.query('INSERT INTO users SET ?', user, (err, results) => {
+        if (err) {
+          console.error('Error inserting user into the database:', err);
+          return res.status(500).send('Error during registration');
+        }
+
+        // Render success page with success flag
+        res.render('register-success', { approved: true });
+      });
     });
   } catch (error) {
     console.error('Error during registration:', error);
     res.status(500).send('Error during registration');
   }
 });
+
+
 // Route: Login Page
 router.get('/login', (req, res) => {
   res.render('login');
@@ -466,6 +482,7 @@ router.get('/applications', (req, res) => {
 
     // Render the applications page
     res.render('applications', { applications: results, user: req.session.user });
+    console.log(results)
   });
 });
 // apply for hostel
@@ -474,33 +491,7 @@ router.get('/applications', (req, res) => {
 router.get('/apply', (req, res) => {
   res.render('apply', { user: req.session.user, error: null });
 });
-
-// Route to check Aadhaar number existence
-router.post('/apply/check-aadhaar', (req, res) => {
-  const { student_aadhaar_no } = req.body;
-
-  if (student_aadhaar_no.length !== 12) {
-    return res.status(400).json({ error: 'Aadhaar number must be 12 digits long' });
-  }
-
-  const checkQuery = 'SELECT COUNT(*) AS count FROM hostel_applicationform WHERE student_aadhaar_no = ?';
-
-  db.query(checkQuery, [student_aadhaar_no], (err, results) => {
-    if (err) {
-      console.error('Error checking Aadhaar number:', err);
-      return res.status(500).json({ error: 'Internal server error' });
-    }
-
-    if (results[0].count > 0) {
-      return res.status(409).json({ error: 'Aadhaar number already exists' });
-    }
-
-    res.status(200).json({ message: 'Aadhaar number is valid and unique' });
-  });
-});
-
 // Route to handle form submission
-
 router.post('/apply/submit', (req, res) => {
   const {
     roll_number,
@@ -602,45 +593,121 @@ router.post('/apply/submit', (req, res) => {
     }
   );
 });
-//approval of applications
-// Route to display applications with a dropdown to approve or reject
-router.get('/approval', (req, res) => {
-  const query = 'SELECT * FROM applications'; // Assuming you're fetching data from `hostel_applicationform`
-  db.query(query, (err, applications) => {
-    if (err) {
-      console.error('Error fetching applications:', err);
-      return res.status(500).send('Error fetching applications');
-    }
-    res.render('approval', { applications });
-  });
-});
-//
-// Route to handle the submission of approval status
-router.post('/approval/submit', (req, res) => {
-  const approvalData = req.body; // Contains the approval status for each application
 
-  // Iterate through the approval data and update each application's approval status
-  for (let key in approvalData) {
-    const applicationNumber = key.split('_')[1]; // Extract application_number from the key
-    const approvalStatus = approvalData[key]; // Get the approval value ('yes' or 'no')
+// Route to check Aadhaar number existence
+router.post('/apply/check-aadhaar', (req, res) => {
+  const { student_aadhaar_no } = req.body;
 
-    // Update the approval status in the database for the corresponding application
-    const updateQuery = `
-      UPDATE applications
-      SET Approved = ?
-      WHERE application_number = ?;
-    `;
-
-    db.query(updateQuery, [approvalStatus, applicationNumber], (err) => {
-      if (err) {
-        console.error('Error updating approval status:', err);
-        return res.status(500).send('Error updating approval status');
-      }
-    });
+  if (student_aadhaar_no.length !== 12) {
+    return res.status(400).json({ error: 'Aadhaar number must be 12 digits long' });
   }
 
-  res.redirect('/approval'); // Redirect to the approval page after processing
+  const checkQuery = 'SELECT COUNT(*) AS count FROM hostel_applicationform WHERE student_aadhaar_no = ?';
+
+  db.query(checkQuery, [student_aadhaar_no], (err, results) => {
+    if (err) {
+      console.error('Error checking Aadhaar number:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (results[0].count > 0) {
+      return res.status(409).json({ error: 'Aadhaar number already exists' });
+    }
+
+    res.status(200).json({ message: 'Aadhaar number is valid and unique' });
+  });
 });
+
+// Route to handle form submission
+
+//approval of applications
+// Route to display applications with a dropdown to approve or reject
+// Route to handle the approval link
+router.get('/approval', (req, res) => {
+  res.status(400).send('Application ID is required to view approval details.');
+});
+
+router.get('/approval/:application_number', (req, res) => {
+  const { application_number } = req.params;
+  const query = 'SELECT * FROM applications WHERE application_number = ?';
+  db.query(query, [application_number], (err, results) => {
+    if (err) {
+      console.error('Error fetching application:', err);
+      return res.status(500).send('Error fetching application details');
+    }
+    if (results.length > 0) {
+      res.render('approval', { application: results[0] });
+    } else {
+      res.status(404).send('Application not found');
+    }
+  });
+});
+
+// Route to handle the submission of approval status
+router.post('/approval/submit', (req, res) => {
+  const approvalData = req.body;
+
+  // Log incoming data for debugging
+  console.log('Form submission data:', approvalData);
+
+  let lastUpdatedApplicationNumber = null;
+
+  const queries = Object.keys(approvalData).map((key) => {
+    if (!key.startsWith('approval_')) {
+      console.error(`Skipping invalid key: ${key}`);
+      return Promise.resolve(); // Skip invalid keys
+    }
+
+    const applicationNumber = key.split('_')[1];
+    const approvalStatus = approvalData[key];
+
+    // Update the last updated application number
+    lastUpdatedApplicationNumber = applicationNumber;
+approval=approvalStatus;
+    return new Promise((resolve, reject) => {
+      const updateQuery = `
+        UPDATE applications
+        SET Approved = ?
+        WHERE application_number = ?;
+      `;
+
+      db.query(updateQuery, [approvalStatus, applicationNumber], (err) => {
+        if (err) {
+          console.error(`Error updating application ${applicationNumber}:`, err);
+          reject(err);
+        } else {
+          console.log(`Successfully updated application ${applicationNumber}`);
+          resolve();
+        }
+      });
+    });
+  });
+
+  Promise.all(queries)
+    .then(() => {
+      if (lastUpdatedApplicationNumber) {
+        res.redirect(`/approval-success?applicationNumber=${lastUpdatedApplicationNumber}&Approved=${approval}`);
+      } else {
+        res.status(400).send('No valid application numbers were processed.');
+      }
+    })
+    .catch((err) => {
+      console.error('Error updating applications:', err);
+      res.status(500).send(`Error updating applications: ${err}`);
+    });
+});
+
+router.get('/approval-success', (req, res) => {
+  const { applicationNumber,Approved } = req.query;
+
+  if (!applicationNumber) {
+    return res.status(400).send('Application number is required.');
+  }
+
+  // Pass the applicationNumber to the EJS template
+  res.render('approval-success', { applicationNumber ,Approved});
+});
+
 
 // Logout Route
 

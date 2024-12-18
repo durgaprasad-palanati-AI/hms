@@ -3,15 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>editstudenthistory</title>
+  <title>Registration Status</title>
   <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
 </head>
 <body>
   <header>
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
-   
-     <h1>Your account has been created successfully.</h1>
+    <% if (approved) { %>
+      <h1>Your account has been created successfully.</h1>
+    <% } else { %>
+      <h1>Registration failed: Your roll number is not approved for registration.</h1>
+    <% } %>
   </header>
+
   <div class="center-links">
-<a href="/login">Go to Login</a>
+    <% if (approved) { %>
+      <a href="/login">Go to Login</a>
+    <% } else { %>
+      <a href="/">Home</a>
+    <% } %>
   </div>
+</body>
+</html>

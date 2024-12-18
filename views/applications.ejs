@@ -29,6 +29,7 @@
             <th><%= column.replace(/_/g, ' ').toUpperCase() %></th>
           <% }) %>
         <% } %>
+        <th>Approval</th>
       </tr>
     </thead>
     <tbody id="data-body">
@@ -37,11 +38,9 @@
           <tr>
             <% Object.values(application).forEach(value => { %>
               <td><%= value %></td>
-             
             <% }) %>
-            
             <td>
-              <a href="/approval">APPROVAL</a>
+              <a href="/approval/<%= application.id %>">Approval</a>
             </td>
           </tr>
         <% }) %>
@@ -51,7 +50,7 @@
         </tr>
       <% } %>
     </tbody>
-  </table>
+  </table>  
 
   <div class="center-links">
     <a href="/dashboard">Go to Dashboard</a>

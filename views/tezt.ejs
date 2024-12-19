@@ -1,7 +1,432 @@
-INSERT INTO hostel_applicationform (
-    full_name, fathers_guardians_name, profession_of_father_guardian, annual_income_father_guardian,
-    mobile_no, place_of_birth, distance_from_residence_to_college, student_aadhaar_no, address_line1,
-    address_line2, city, district, state, country, pincode, contact_number, email_id, course, place_of_study,
-    study_period, education_details_vi_to_xth, education_details_intermediate, nationality, category,
-    sub_caste, food_preference, application_type
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostel Application Form</title>
+  <link rel="stylesheet" href="/styles/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+  </header>
+
+  <h1>Hostel Application Form</h1>
+
+  <form action="/apply/submit" method="POST" class="login-form">
+    <!-- Application Type -->
+    <input type="hidden" name="application_type" value="<%= applicationType %>" />
+
+    <!-- Aadhaar Number -->
+    <div class="form-group">
+      <label for="student_aadhaar_no">Student Aadhaar Number</label>
+      <input
+        type="text"
+        id="student_aadhaar_no"
+        name="student_aadhaar_no"
+        maxlength="12"
+        value="<%= formData?.student_aadhaar_no || '' %>"
+        required
+      />
+      <p id="aadhaar-error" style="color: red;"></p>
+    </div>
+
+    <!-- Roll Number -->
+    <div class="form-group">
+      <label for="roll_number">Roll Number</label>
+      <input
+        type="text"
+        id="roll_number"
+        name="roll_number"
+        value="<%= formData?.roll_number || '' %>"
+        required
+        <%= applicationType === 'Renewal' ? 'readonly' : '' %>
+      />
+    </div>
+
+    <!-- Full Name -->
+    <div class="form-group">
+      <label for="full_name">Full Name</label>
+      <input
+        type="text"
+        id="full_name"
+        name="full_name"
+        value="<%= formData?.full_name || '' %>"
+        required
+      />
+    </div>
+
+    <!-- Father's/Guardian's Name -->
+    <div class="form-group">
+      <label for="fathers_guardians_name">Father's/Guardian's Name</label>
+      <input
+        type="text"
+        id="fathers_guardians_name"
+        name="fathers_guardians_name"
+        value="<%= formData?.fathers_guardians_name || '' %>"
+      />
+    </div>
+
+    <!-- Profession -->
+    <div class="form-group">
+      <label for="profession_of_father_guardian">Profession of Father/Guardian</label>
+      <input
+        type="text"
+        id="profession_of_father_guardian"
+        name="profession_of_father_guardian"
+        value="<%= formData?.profession_of_father_guardian || '' %>"
+      />
+    </div>
+
+    <!-- Annual Income -->
+    <div class="form-group">
+      <label for="annual_income_father_guardian">Annual Income of Father/Guardian</label>
+      <input
+        type="number"
+        id="annual_income_father_guardian"
+        name="annual_income_father_guardian"
+        step="0.01"
+        value="<%= formData?.annual_income_father_guardian || '' %>"
+      />
+    </div>
+
+    <!-- Mobile Number -->
+    <div class="form-group">
+      <label for="mobile_no">Mobile Number</label>
+      <input
+        type="text"
+        id="mobile_no"
+        name="mobile_no"
+        value="<%= formData?.mobile_no || '' %>"
+      />
+    </div>
+
+    <!-- Address -->
+    <div class="form-group">
+      <label for="address_line1">Address Line 1</label>
+      <input
+        type="text"
+        id="address_line1"
+        name="address_line1"
+        value="<%= formData?.address_line1 || '' %>"
+      />
+    </div>
+    <div class="form-group">
+      <label for="address_line2">Address Line 2</label>
+      <input
+        type="text"
+        id="address_line2"
+        name="address_line2"
+        value="<%= formData?.address_line2 || '' %>"
+      />
+    </div>
+
+    <!-- City, District, State -->
+    <div class="form-group">
+      <label for="city">City</label>
+      <input
+        type="text"
+        id="city"
+        name="city"
+        value="<%= formData?.city || '' %>"
+      />
+    </div>
+    <div class="form-group">
+      <label for="district">District</label>
+      <input
+        type="text"
+        id="district"
+        name="district"
+        value="<%= formData?.district || '' %>"
+      />
+    </div>
+    <div class="form-group">
+      <label for="state">State</label>
+      <input
+        type="text"
+        id="state"
+        name="state"
+        value="<%= formData?.state || '' %>"
+      />
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" id="submit-btn" class="btn">Submit Application</button>
+  </form>
+
+  <script>
+    $(document).ready(() => {
+      const applicationType = "<%= applicationType %>";
+
+      // Autofill form for renewal
+      if (applicationType === "Renewal") {
+        const rollNumber = $("#roll_number").val();
+        if (rollNumber) {
+          $.ajax({
+            url: `/apply/fetch-renewal/${rollNumber}`,
+            method: "GET",
+            success: (data) => {
+              Object.keys(data).forEach((key) => {
+                $(`#${key}`).val(data[key]);
+              });
+            },
+            error: (err) => {
+              console.error("Error fetching renewal data:", err);
+            },
+          });
+        }
+      }
+
+      // Aadhaar Validation
+      $("#student_aadhaar_no").on("input", function () {
+        const aadhaarNo = $(this).val();
+        if (aadhaarNo.length === 12) {
+          $.ajax({
+            url: "/apply/check-aadhaar",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ student_aadhaar_no: aadhaarNo }),
+            success: () => {
+              $("#aadhaar-error").text("");
+              $("#submit-btn").prop("disabled", false);
+            },
+            error: (xhr) => {
+              const errorMessage = xhr.responseJSON?.error || "Invalid Aadhaar";
+              $("#aadhaar-error").text(errorMessage);
+              $("#submit-btn").prop("disabled", true);
+            },
+          });
+        } else {
+          $("#aadhaar-error").text("Aadhaar number must be 12 digits long");
+          $("#submit-btn").prop("disabled", true);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostel Application Form</title>
+  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+  </header>
+
+  <h1>Hostel Application Form</h1>
+
+  <form action="/apply/submit" method="POST" class="login-form">
+    <div class="form-group">
+      <label for="roll_number">Roll number</label>
+      <input type="text" id="roll_number" name="roll_number" maxlength="12" required>
+      <p id="roll-number-error" style="color: red;"></p> <!-- Error message -->
+      
+    </div>
+    
+    <div class="form-group">
+      <label for="student_aadhaar_no">Student Aadhaar Number</label>
+      <input
+        type="text"
+        id="student_aadhaar_no"
+        name="student_aadhaar_no"
+        maxlength="12"
+        required
+      />
+      <p id="aadhaar-error" style="color: red;"></p>
+    </div>
+
+    <div class="form-group">
+      <label for="full_name">Full Name</label>
+      <input type="text" id="full_name" name="full_name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="fathers_guardians_name">Father's/Guardian's Name</label>
+      <input type="text" id="fathers_guardians_name" name="fathers_guardians_name">
+    </div>
+
+    <div class="form-group">
+      <label for="profession_of_father_guardian">Profession of Father/Guardian</label>
+      <input type="text" id="profession_of_father_guardian" name="profession_of_father_guardian">
+    </div>
+
+    <div class="form-group">
+      <label for="annual_income_father_guardian">Annual Income of Father/Guardian</label>
+      <input type="number" id="annual_income_father_guardian" name="annual_income_father_guardian" step="0.01">
+    </div>
+
+    <div class="form-group">
+      <label for="mobile_no">Mobile Number</label>
+      <input type="text" id="mobile_no" name="mobile_no">
+      <p id="mobile-error" style="color: red;"></p> <!-- Error message -->
+    </div>
+
+    <div class="form-group">
+      <label for="place_of_birth">Place of Birth</label>
+      <input type="text" id="place_of_birth" name="place_of_birth">
+    </div>
+
+    <div class="form-group">
+      <label for="distance_from_residence_to_college">Distance from Residence to College (in km)</label>
+      <input type="number" id="distance_from_residence_to_college" name="distance_from_residence_to_college" step="0.01">
+    </div>
+
+    <div class="form-group">
+      <label for="address_line1">Address Line 1</label>
+      <input type="text" id="address_line1" name="address_line1">
+    </div>
+
+    <div class="form-group">
+      <label for="address_line2">Address Line 2</label>
+      <input type="text" id="address_line2" name="address_line2">
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" id="city" name="city">
+    </div>
+
+    <div class="form-group">
+      <label for="district">District</label>
+      <input type="text" id="district" name="district">
+    </div>
+
+    <div class="form-group">
+      <label for="state">State</label>
+      <input type="text" id="state" name="state">
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country</label>
+      <input type="text" id="country" name="country">
+    </div>
+
+    <div class="form-group">
+      <label for="pincode">Pincode</label>
+      <input type="text" id="pincode" name="pincode">
+    </div>
+
+    <div class="form-group">
+      <label for="contact_number">Contact Number</label>
+      <input type="text" id="contact_number" name="contact_number">
+    </div>
+
+    <div class="form-group">
+      <label for="email_id">Email ID</label>
+      <input type="email" id="email_id" name="email_id">
+    </div>
+
+    <div class="form-group">
+      <label for="course">Course</label>
+      <input type="text" id="course" name="course">
+    </div>
+
+    <div class="form-group">
+      <label for="place_of_study">Place of Study</label>
+      <input type="text" id="place_of_study" name="place_of_study">
+    </div>
+
+    <div class="form-group">
+      <label for="study_period">Study Period</label>
+      <input type="text" id="study_period" name="study_period">
+    </div>
+
+    <div class="form-group">
+      <label for="education_details_vi_to_xth">Education Details (VI to Xth)</label>
+      <input type="text" id="education_details_vi_to_xth" name="education_details_vi_to_xth">
+    </div>
+
+    <div class="form-group">
+      <label for="education_details_intermediate">Education Details (Intermediate)</label>
+      <input type="text" id="education_details_intermediate" name="education_details_intermediate">
+    </div>
+
+    <div class="form-group">
+      <label for="nationality">Nationality</label>
+      <input type="text" id="nationality" name="nationality">
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <input type="text" id="category" name="category">
+    </div>
+
+    <div class="form-group">
+      <label for="sub_caste">Sub Caste</label>
+      <input type="text" id="sub_caste" name="sub_caste">
+    </div>
+
+    <div class="form-group">
+      <label for="food_preference">Food Preference</label>
+      <select id="food_preference" name="food_preference">
+        <option value="Vegetarian">Vegetarian</option>
+        <option value="Non-Vegetarian">Non-Vegetarian</option>
+      </select>
+    </div>
+    <input type="hidden" name="application_type" value="<%= applicationType %>" />
+      
+    <button type="submit" id="submit-btn" class="btn" disabled>Submit Application</button>
+  </form>
+
+  <script>
+    $(document).ready(() => {
+      $('#student_aadhaar_no').on('input', function () {
+        const aadhaarNo = $(this).val();
+
+        if (aadhaarNo.length === 12) {
+          $.ajax({
+            url: '/apply/check-aadhaar',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ student_aadhaar_no: aadhaarNo }),
+            success: () => {
+              $('#aadhaar-error').text('');
+              $('#submit-btn').prop('disabled', false);
+            },
+            error: (xhr) => {
+              const errorMessage = xhr.responseJSON?.error || 'An error occurred';
+              $('#aadhaar-error').text(errorMessage);
+              $('#submit-btn').prop('disabled', true);
+            },
+          });
+        } else {
+          $('#aadhaar-error').text('Aadhaar number must be 12 digits long');
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+
+      $('#roll_number').on('input', function () {
+        const rollNumber = $(this).val();
+
+        if (rollNumber.length === 12) {
+          $('#roll-number-error').text('');
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#roll-number-error').text('Roll number must be 12 digits long');
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+
+      $('#mobile_no').on('input', function () {
+        const mobileNo = $(this).val();
+
+        if (mobileNo.length === 10 && /^\d+$/.test(mobileNo)) {
+          $('#mobile-error').text('');
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#mobile-error').text('Mobile number must be 10 digits long');
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -554,11 +554,31 @@ router.get('/applications', (req, res) => {
 // Route to render the application form
 
 router.get('/apply', (req, res) => {
-  res.render('apply', { user: req.session.user, error: null });
+  const applicationType = req.query.type || 'fresh'; // Default to 'fresh' if no type is specified
+  res.render('apply', {
+    applicationType: applicationType,
+    formData: {
+      student_aadhaar_no: '',
+      roll_number: '',
+      full_name: '',
+      fathers_guardians_name: '',
+      profession_of_father_guardian: '',
+      annual_income_father_guardian: '',
+      mobile_no: '',
+      address_line1: '',
+      address_line2: '',
+      city: '',
+      district: '',
+      state: '',
+    },
+  });
+  
 });
+
 // Route to handle form submission
 router.post('/apply/submit', (req, res) => {
   const {
+    application_type,
     roll_number,
     full_name,
     fathers_guardians_name,
@@ -586,9 +606,8 @@ router.post('/apply/submit', (req, res) => {
     category,
     sub_caste,
     food_preference,
-    application_type,
   } = req.body;
-
+  console.log('Form submitted:', { application_type, roll_number });
   const insertApplicationFormQuery = `
     INSERT INTO hostel_applicationform (
       roll_number, full_name, fathers_guardians_name, profession_of_father_guardian, annual_income_father_guardian,
@@ -683,7 +702,32 @@ router.post('/apply/check-aadhaar', (req, res) => {
   });
 });
 
-// Route to handle form submission
+// auto fill details
+router.get('/apply/fetch-details', (req, res) => {
+  const { roll_number } = req.query;
+
+  if (!roll_number) {
+    return res.status(400).json({ error: 'Roll number is required' });
+  }
+
+  const fetchDetailsQuery = `
+    SELECT * FROM hostel_applicationform WHERE roll_number = ? LIMIT 1;
+  `;
+
+  db.query(fetchDetailsQuery, [roll_number], (err, results) => {
+    if (err) {
+      console.error('Error fetching application details:', err);
+      return res.status(500).json({ error: 'Error fetching application details' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'No application found for this roll number' });
+    }
+
+    res.json(results[0]);
+  });
+});
+
 
 //approval of applications
 // Route to display applications with a dropdown to approve or reject

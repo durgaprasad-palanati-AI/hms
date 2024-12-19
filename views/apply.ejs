@@ -30,8 +30,34 @@
     
     <div class="form-group">
       <label for="roll_number">Roll number</label>
-      <input type="text" id="roll_number" name="roll_number" required>
+      <input 
+        type="text" 
+        id="roll_number" 
+        name="roll_number" 
+        required 
+        pattern="\d{12}" 
+        minlength="12" 
+        maxlength="12"
+      >
+      <small id="error-message" style="color: red; display: none;">Roll number must be exactly 12 digits long.</small>
     </div>
+    
+    <script>
+      const rollNumberInput = document.getElementById('roll_number');
+      const errorMessage = document.getElementById('error-message');
+    
+      rollNumberInput.addEventListener('input', () => {
+        // Validate if input is exactly 12 digits
+        const isValid = /^\d{12}$/.test(rollNumberInput.value);
+    
+        if (!isValid) {
+          errorMessage.style.display = 'block'; // Show error message
+        } else {
+          errorMessage.style.display = 'none'; // Hide error message
+        }
+      });
+    </script>
+    
     <div class="form-group">
       <label for="full_name">Full Name</label>
       <input type="text" id="full_name" name="full_name" required>
@@ -53,9 +79,33 @@
     </div>
 
     <div class="form-group">
-      <label for="mobile_no">Mobile Number</label>
-      <input type="text" id="mobile_no" name="mobile_no">
+      <label for="mobile_no">Mobile Number (parents/guardian)</label>
+      <input 
+      type="text" 
+      id="mobile_no" 
+      name="mobile_no"
+      required
+      pattern="\d{10}" 
+        minlength="10" 
+        maxlength="10"
+        >
+      <small id="error-messagem" style="color: red; display: none;">Roll number must be exactly 10 digits long.</small>
     </div>
+    <script>
+      const mobileNumberInput = document.getElementById('mobile_no');
+      const errorMessagemobile = document.getElementById('error-messagem');
+    
+      mobileNumberInput.addEventListener('input', () => {
+        // Validate if input is exactly 10 digits
+        const isValid = /^\d{10}$/.test(mobileNumberInput.value);
+    
+        if (!isValid) {
+          errorMessagemobile.style.display = 'block'; // Show error message
+        } else {
+          errorMessagemobile.style.display = 'none'; // Hide error message
+        }
+      });
+    </script>
 
     <div class="form-group">
       <label for="place_of_birth">Place of Birth</label>

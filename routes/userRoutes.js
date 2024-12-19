@@ -264,6 +264,7 @@ router.get('/studenthistory', (req, res) => {
         const errorMessage = 'No history found for the given roll number.';
         console.log('Error Message:', errorMessage);  // Log the error message here
         return res.render('studenthistory', {
+          history: results,
           errorMessage: errorMessage,
           roll_number: rollNumber,
           user: req.session.user,
@@ -323,6 +324,7 @@ router.get('/studenthistory/:rollNumber', (req, res) => {
 
       if (results.length === 0) {
         return res.render('studenthistory', {
+          history: results,
           errorMessage: 'No history found for the given roll number.',
           roll_number: rollNumber,
           user: req.session.user,

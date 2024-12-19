@@ -11,9 +11,7 @@ router.get('/', (req, res) => {
 router.get('/register', (req, res) => {
   res.render('register'); // Render the register.ejs view
 });
-
 // Route: Handle Registration
-
 router.post('/register', async (req, res) => {
   const { name, password, confirm_password, roll_number } = req.body;
 
@@ -60,13 +58,10 @@ router.post('/register', async (req, res) => {
     res.status(500).send('Error during registration');
   }
 });
-
-
 // Route: Login Page
 router.get('/login', (req, res) => {
   res.render('login');
 });
-
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -109,7 +104,6 @@ router.post('/login', (req, res) => {
     });
   });
 });
-
 // Admin Dashboard Route
 router.get('/admin-dashboard', (req, res) => {
   if (!req.session.user || !req.session.user.is_admin) {
@@ -156,7 +150,6 @@ router.get('/student-entry', (req, res) => {
 router.get('/student-success', (req, res) => {
   res.render('student-success'); // Render the success page
 });
-
 // POST route for handling student entry form submission
 router.post('/student-entry', (req, res) => {
   const { roll_number, name, course, year, gender } = req.body;
@@ -181,7 +174,6 @@ router.post('/student-entry', (req, res) => {
   });
 });
 // GET route to render the student edit form
-
 router.get('/student-edit/:roll_number', (req, res) => {
   const rollNumber = req.params.roll_number;
   
@@ -227,7 +219,6 @@ router.post('/student-edit/:roll_number', (req, res) => {
     res.render('student-edit-success');
   });
 });
-
 // Route to view student history (for admin)
 router.get('/studenthistory', (req, res) => {
   console.log('Student History Route-1 Hit');
@@ -297,7 +288,6 @@ router.get('/studenthistory', (req, res) => {
     });
   });
 });
-
 router.get('/studenthistory/:rollNumber', (req, res) => {
   console.log('Student History Route Hit');
   const rollNumber = req.params.rollNumber;
@@ -357,8 +347,6 @@ router.get('/studenthistory/:rollNumber', (req, res) => {
     });
   });
 });
-
-
 // Route to view all students' history (Admin )
 router.get('/viewallstudentshistory', (req, res) => {
   // Query to fetch all student history
@@ -384,7 +372,6 @@ router.get('/enterstudenthistory/:roll_number', (req, res) => {
   const rollNumber = req.params.roll_number;
   res.render('enterstudenthistory', { rollNumber });
 });
-
 // Route to edit student history (for admin)
 router.get('/editstudenthistory/:roll_number', (req, res) => {
   const rollNumber = req.params.roll_number;
@@ -403,7 +390,6 @@ router.get('/editstudenthistory/:roll_number', (req, res) => {
     res.render('history-success'); // Render the success page
   });
 });
-
 // Save/Update Student History
 router.post('/savestudenthistory', (req, res) => {
   const { rollNumber, room_no, feepaid, feedue, scholarship, month, monthlybill, year } = req.body;
@@ -451,8 +437,6 @@ router.get('/updatestudenthistory/:roll_number', (req, res) => {
     res.render('editstudenthistory', { history: results[0], user: req.user });
   });
 });
-
-
 // Route to update student history (admin)
 router.post('/updatestudenthistory/:roll_number', (req, res) => {
   console.log('POST /updatestudenthistory reached');
@@ -475,7 +459,6 @@ router.post('/updatestudenthistory/:roll_number', (req, res) => {
     res.render('history-success'); // Success page
   });
 });
-
 // Route to fetch dues grouped by roll_number and year
 router.get('/dues', (req, res) => {
   // SQL query to calculate dues
@@ -503,7 +486,6 @@ router.get('/dues', (req, res) => {
     res.render('dues', { dues: results, user: req.session.user });
   });
 });
-
 router.get('/scholarships', (req, res) => {
   // SQL query to calculate scholarships
   const query = `
@@ -552,9 +534,9 @@ router.get('/applications', (req, res) => {
 });
 // apply for hostel
 // Route to render the application form
-
 router.get('/apply', (req, res) => {
   const applicationType = req.query.type || 'fresh'; // Default to 'fresh' if no type is specified
+  
   res.render('apply', {
     applicationType: applicationType,
     formData: {
@@ -574,7 +556,6 @@ router.get('/apply', (req, res) => {
   });
   
 });
-
 // Route to handle form submission
 router.post('/apply/submit', (req, res) => {
   const {
@@ -677,7 +658,6 @@ router.post('/apply/submit', (req, res) => {
     }
   );
 });
-
 // Route to check Aadhaar number existence
 router.post('/apply/check-aadhaar', (req, res) => {
   const { student_aadhaar_no } = req.body;
@@ -701,7 +681,6 @@ router.post('/apply/check-aadhaar', (req, res) => {
     res.status(200).json({ message: 'Aadhaar number is valid and unique' });
   });
 });
-
 // auto fill details
 router.get('/apply/fetch-details', (req, res) => {
   const { roll_number } = req.query;
@@ -727,15 +706,12 @@ router.get('/apply/fetch-details', (req, res) => {
     res.json(results[0]);
   });
 });
-
-
 //approval of applications
 // Route to display applications with a dropdown to approve or reject
 // Route to handle the approval link
 router.get('/approval', (req, res) => {
   res.status(400).send('Application ID is required to view approval details.');
 });
-
 router.get('/approval/:application_number', (req, res) => {
   const { application_number } = req.params;
   const query = 'SELECT * FROM applications WHERE application_number = ?';
@@ -751,7 +727,6 @@ router.get('/approval/:application_number', (req, res) => {
     }
   });
 });
-
 // Route to handle the submission of approval status
 router.post('/approval/submit', (req, res) => {
   const approvalData = req.body;
@@ -805,7 +780,6 @@ approval=approvalStatus;
       res.status(500).send(`Error updating applications: ${err}`);
     });
 });
-
 router.get('/approval-success', (req, res) => {
   const { applicationNumber,Approved } = req.query;
 
@@ -816,10 +790,7 @@ router.get('/approval-success', (req, res) => {
   // Pass the applicationNumber to the EJS template
   res.render('approval-success', { applicationNumber ,Approved});
 });
-
-
 // Logout Route
-
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {
   if (req.session.user) {
@@ -836,5 +807,4 @@ router.get('/logout', isAuthenticated, (req, res) => {
     res.redirect('/login');
   });
 });
-
 module.exports = router;

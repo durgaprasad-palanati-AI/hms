@@ -15,7 +15,7 @@
 
   <h1>Hostel Application Form</h1>
 
-  <form action="/apply/submit" method="POST" class="login-form">
+  <form action="/apply/submit?type=renwal" method="POST" class="login-form">
     <div class="form-group">
       <label for="roll_number">Roll number</label>
       <input 
@@ -74,7 +74,7 @@
         minlength="10" 
         maxlength="10"
         >
-      <small id="error-messagem" style="color: red; display: none;">Mobile number must be exactly 10 digits long.</small>
+      <small id="error-messagem" style="color: red; display: none;">Roll number must be exactly 10 digits long.</small>
     </div>
     <script>
       const mobileNumberInput = document.getElementById('mobile_no');
@@ -136,32 +136,12 @@
       <label for="pincode">Pincode</label>
       <input type="text" id="pincode" name="pincode">
     </div>
+
     <div class="form-group">
       <label for="contact_number">Contact Number</label>
-      <input 
-        type="text" 
-        id="contact_number" 
-        name="contact_number" 
-        pattern="[0-9]{10}" 
-        title="Please enter a valid 10-digit mobile number." 
-        required>
-        <small id="error-messagec" style="color: red; display: none;">Mobile number must be exactly 10 digits long.</small>
+      <input type="text" id="contact_number" name="contact_number">
     </div>
-    <script>
-      const contactNumberInput = document.getElementById('contact_number');
-      const errorMessagecontact = document.getElementById('error-messagec');
-    
-      contactNumberInput.addEventListener('input', () => {
-        // Validate if input is exactly 10 digits
-        const isValid = /^\d{10}$/.test(contactNumberInput.value);
-    
-        if (!isValid) {
-          errorMessagecontact.style.display = 'block'; // Show error message
-        } else {
-          errorMessagecontact.style.display = 'none'; // Hide error message
-        }
-      });
-    </script>
+
     <div class="form-group">
       <label for="email_id">Email ID</label>
       <input type="email" id="email_id" name="email_id">
@@ -223,7 +203,7 @@
       const rollError = document.getElementById('roll-error');
       const aadhaarError = document.getElementById('aadhaar-error');
       const submitButton = document.getElementById('submit-btn');
- 
+  
       // Validate Roll Number
       rollNumberInput.addEventListener('input', () => {
         const rollNumber = rollNumberInput.value;

@@ -10,24 +10,12 @@
 <body>
   <header>
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h3> <a href="/" class="right-link">Home</a></h3>
   </header>
 
   <h1>Hostel Application Form</h1>
 
   <form action="/apply/submit" method="POST" class="login-form">
-
-    <div class="form-group">
-      <label for="student_aadhaar_no">Student Aadhaar Number</label>
-      <input
-        type="text"
-        id="student_aadhaar_no"
-        name="student_aadhaar_no"
-        maxlength="12"
-        required
-      />
-      <p id="aadhaar-error" style="color: red;"></p>
-    </div>
-    
     <div class="form-group">
       <label for="roll_number">Roll number</label>
       <input 
@@ -39,24 +27,21 @@
         minlength="12" 
         maxlength="12"
       >
-      <small id="error-message" style="color: red; display: none;">Roll number must be exactly 12 digits long.</small>
+      <small id="roll-error" style="color: red;"></small>
     </div>
-    
-    <script>
-      const rollNumberInput = document.getElementById('roll_number');
-      const errorMessage = document.getElementById('error-message');
-    
-      rollNumberInput.addEventListener('input', () => {
-        // Validate if input is exactly 12 digits
-        const isValid = /^\d{12}$/.test(rollNumberInput.value);
-    
-        if (!isValid) {
-          errorMessage.style.display = 'block'; // Show error message
-        } else {
-          errorMessage.style.display = 'none'; // Hide error message
-        }
-      });
-    </script>
+    <div class="form-group">
+      <label for="student_aadhaar_no">Aadhaar Number</label>
+      <input 
+        type="text" 
+        id="student_aadhaar_no" 
+        name="student_aadhaar_no" 
+        required 
+        pattern="\d{12}" 
+        minlength="12" 
+        maxlength="12"
+      >
+      <small id="aadhaar-error" style="color: red;"></small>
+    </div>
     
     <div class="form-group">
       <label for="full_name">Full Name</label>
@@ -89,7 +74,7 @@
         minlength="10" 
         maxlength="10"
         >
-      <small id="error-messagem" style="color: red; display: none;">Roll number must be exactly 10 digits long.</small>
+      <small id="error-messagem" style="color: red; display: none;">Mobile number must be exactly 10 digits long.</small>
     </div>
     <script>
       const mobileNumberInput = document.getElementById('mobile_no');
@@ -117,7 +102,6 @@
       <input type="number" id="distance_from_residence_to_college" name="distance_from_residence_to_college" step="0.01">
     </div>
 
-    
     <div class="form-group">
       <label for="address_line1">Address Line 1</label>
       <input type="text" id="address_line1" name="address_line1">
@@ -152,12 +136,32 @@
       <label for="pincode">Pincode</label>
       <input type="text" id="pincode" name="pincode">
     </div>
-
     <div class="form-group">
       <label for="contact_number">Contact Number</label>
-      <input type="text" id="contact_number" name="contact_number">
+      <input 
+        type="text" 
+        id="contact_number" 
+        name="contact_number" 
+        pattern="[0-9]{10}" 
+        title="Please enter a valid 10-digit mobile number." 
+        required>
+        <small id="error-messagec" style="color: red; display: none;">Mobile number must be exactly 10 digits long.</small>
     </div>
-
+    <script>
+      const contactNumberInput = document.getElementById('contact_number');
+      const errorMessagecontact = document.getElementById('error-messagec');
+    
+      contactNumberInput.addEventListener('input', () => {
+        // Validate if input is exactly 10 digits
+        const isValid = /^\d{10}$/.test(contactNumberInput.value);
+    
+        if (!isValid) {
+          errorMessagecontact.style.display = 'block'; // Show error message
+        } else {
+          errorMessagecontact.style.display = 'none'; // Hide error message
+        }
+      });
+    </script>
     <div class="form-group">
       <label for="email_id">Email ID</label>
       <input type="email" id="email_id" name="email_id">
@@ -210,43 +214,102 @@
         <option value="Non-Vegetarian">Non-Vegetarian</option>
       </select>
     </div>
-    <div class="form-group">
-        <label for="application_type">Application Type</label>
-        <select id="application_type" name="application_type" required>
-          <option value="fresh">Fresh</option>
-          <option value="renewal">Renewal</option>
-        </select>
-      </div>
-      
     <button type="submit" class="btn">Submit Application</button>
   </form>
   <script>
-    $(document).ready(() => {
-      $('#student_aadhaar_no').on('input', function () {
-        const aadhaarNo = $(this).val();
-
-        if (aadhaarNo.length === 12) {
-          $.ajax({
-            url: '/apply/check-aadhaar',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ student_aadhaar_no: aadhaarNo }),
-            success: () => {
-              $('#aadhaar-error').text('');
-              $('#submit-btn').prop('disabled', false);
-            },
-            error: (xhr) => {
-              const errorMessage = xhr.responseJSON?.error || 'An error occurred';
-              $('#aadhaar-error').text(errorMessage);
-              $('#submit-btn').prop('disabled', true);
-            },
-          });
-        } else {
-          $('#aadhaar-error').text('Aadhaar number must be 12 digits long');
-          $('#submit-btn').prop('disabled', true);
+    document.addEventListener('DOMContentLoaded', () => {
+      const rollNumberInput = document.getElementById('roll_number');
+      const aadhaarInput = document.getElementById('student_aadhaar_no');
+      const rollError = document.getElementById('roll-error');
+      const aadhaarError = document.getElementById('aadhaar-error');
+      const submitButton = document.getElementById('submit-btn');
+  
+      // Get URL Parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+  
+      // Validate Roll Number
+      rollNumberInput.addEventListener('input', () => {
+        const rollNumber = rollNumberInput.value;
+  
+        // Check if input is exactly 12 digits
+        if (!/^\d{12}$/.test(rollNumber)) {
+          rollError.textContent = 'Roll number must be exactly 12 digits long.';
+          submitButton.disabled = true;
+          return;
         }
+  
+        // Skip uniqueness check if type is 'renewal'
+        if (type === 'renewal') {
+          rollError.textContent = '';
+          checkSubmitButtonState();
+          return;
+        }
+  
+        // Check uniqueness via AJAX
+        $.ajax({
+          url: '/apply/check-roll-number',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ roll_number: rollNumber }),
+          success: () => {
+            rollError.textContent = '';
+            checkSubmitButtonState();
+          },
+          error: (xhr) => {
+            const errorMessage = xhr.responseJSON?.error || 'An error occurred';
+            rollError.textContent = errorMessage;
+            submitButton.disabled = true;
+          },
+        });
       });
+  
+      // Validate Aadhaar Number
+      aadhaarInput.addEventListener('input', () => {
+        const aadhaarNo = aadhaarInput.value;
+  
+        // Check if input is exactly 12 digits
+        if (!/^\d{12}$/.test(aadhaarNo)) {
+          aadhaarError.textContent = 'Aadhaar number must be exactly 12 digits long.';
+          submitButton.disabled = true;
+          return;
+        }
+  
+        // Skip uniqueness check if type is 'renewal'
+        if (type === 'renewal') {
+          aadhaarError.textContent = '';
+          checkSubmitButtonState();
+          return;
+        }
+  
+        // Check uniqueness via AJAX
+        $.ajax({
+          url: '/apply/check-aadhaar',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ student_aadhaar_no: aadhaarNo }),
+          success: () => {
+            aadhaarError.textContent = '';
+            checkSubmitButtonState();
+          },
+          error: (xhr) => {
+            const errorMessage = xhr.responseJSON?.error || 'An error occurred';
+            aadhaarError.textContent = errorMessage;
+            submitButton.disabled = true;
+          },
+        });
+      });
+  
+      // Check if both fields are valid and enable submit button
+      function checkSubmitButtonState() {
+        if (!rollError.textContent && !aadhaarError.textContent) {
+          submitButton.disabled = false;
+        } else {
+          submitButton.disabled = true;
+        }
+      }
     });
   </script>
+  
 </body>
 </html>

@@ -538,7 +538,7 @@ router.get('/applications', (req, res) => {
 // Route to render the application form
 router.get('/apply', (req, res) => {
   const applicationType = req.query.type || 'fresh'; // Default to 'fresh' if no type is specified
-  
+  console.log(" apply route form-",applicationType);
   res.render('apply', {
     applicationType: applicationType,
     formData: {
@@ -560,8 +560,9 @@ router.get('/apply', (req, res) => {
 });
 // Route to handle form submission
 router.post('/apply/submit', (req, res) => {
+  const applicationType = req.query.type;
   const {
-    application_type,
+    application_type=applicationType,
     roll_number,
     full_name,
     fathers_guardians_name,
@@ -683,6 +684,34 @@ router.post('/apply/check-aadhaar', (req, res) => {
     res.status(200).json({ message: 'Aadhaar number is valid and unique' });
   });
 });
+// Route to check Roll number existence
+router.post('/apply/check-roll-number', (req, res) => {
+  const { roll_number } = req.body;
+
+  // Check if roll number is exactly 12 digits long
+  if (roll_number.length !== 12) {
+    return res.status(400).json({ error: 'Roll number must be 12 digits long' });
+  }
+
+  const checkQuery = 'SELECT COUNT(*) AS count FROM hostel_applicationform WHERE roll_number = ?';
+
+  db.query(checkQuery, [roll_number], (err, results) => {
+    if (err) {
+      console.error('Error checking roll number:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (results[0].count > 0) {
+      console.log("in route ACRN form-",roll_number);
+      const applicationType = req.query.type;
+          console.log("in route ACRN form-",applicationType);
+      return res.status(409).json({ error: 'Roll number already exists' });
+    }
+
+    res.status(200).json({ message: 'Roll number is valid and unique' });
+  });
+});
+
 // auto fill details
 router.get('/apply/fetch-details', (req, res) => {
   const { roll_number } = req.query;

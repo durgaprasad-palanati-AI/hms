@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview Application</title>
+  <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+  <header>
+    <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <h1>Preview Application</h1>
+  </header>
+  
+  <div class="preview-container">
+    <h2>Application Details</h2>
+    <table>
+      <% for (let key in formData) { %>
+        <tr>
+          <td><%= key.replace(/_/g, ' ').toUpperCase() %></td>
+          <td><%= formData[key] %></td>
+        </tr>
+      <% } %>
+    </table>
+  </div>
+
+  <form action="/apply/submit" method="POST" class="login-form">
+    <% for (let key in formData) { %>
+      <input type="hidden" name="<%= key %>" value="<%= formData[key] %>">
+    <% } %>
+    <button type="submit" class="btn">Confirm and Submit</button>
+  </form>
+
+  <button onclick="window.history.back()" class="btn">Edit</button>
+</body>
+</html>

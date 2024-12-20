@@ -15,7 +15,8 @@
 
   <h1>Hostel Application Form</h1>
 
-  <form action="/apply/submit" method="POST" class="login-form">
+  <form action="/apply/preview" method="POST" class="login-form">
+    <input type="hidden" name="application_type" value="<%= applicationType %>">
     <div class="form-group">
       <label for="roll_number">Roll number</label>
       <input 
@@ -214,7 +215,7 @@
         <option value="Non-Vegetarian">Non-Vegetarian</option>
       </select>
     </div>
-    <button type="submit" class="btn">Submit Application</button>
+    <button type="preview" class="btn">Preview Application</button>
   </form>
   <script>
     document.addEventListener('DOMContentLoaded', () => {

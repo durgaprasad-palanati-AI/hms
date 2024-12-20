@@ -4,18 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Application Success</title>
-  <link rel="stylesheet" href="../styles/style.css"> <!-- Link to CSS -->
+  <link rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
   <header>
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
     <h1>Your application has been submitted successfully.</h1>
   </header>
+  
   <div class="application-info">
     <p>Your Application Number is: <strong><%= applicationNumber %></strong></p>
   </div>
+
+  <div class="application-details">
+    <h2>Submitted Application Details</h2>
+    <table>
+      <% for (let key in formData) { %>
+        <tr>
+          <td><strong><%= key.replace(/_/g, ' ').toUpperCase() %></strong></td>
+          <td><%= formData[key] %></td>
+        </tr>
+      <% } %>
+    </table>
+  </div>
+
   <div class="center-links">
-    <a href="/">Home</a>
+    <button onclick="window.print()" class="button">Print Application</button>
+    <a href="/" class="btn">Home</a>
   </div>
 </body>
 </html>

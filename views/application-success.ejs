@@ -9,10 +9,13 @@
 <body>
   <header>
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
+    <p>Application Type: <strong><%= formData.application_type %></strong></p>  
     <h1>Your application has been submitted successfully.</h1>
+    <h3> <div><a href="/" class="right-link no-print">Home</a></div> </h3>
   </header>
   
   <div class="application-info">
+   
     <p>Your Application Number is: <strong><%= applicationNumber %></strong></p>
   </div>
 
@@ -28,7 +31,7 @@
     </table>
   </div>
 
-  <div class="center-links">
+  <div class="center-links no-print">
     <button onclick="window.print()" class="button">Print Application</button>
     <a href="/" class="btn">Home</a>
   </div>

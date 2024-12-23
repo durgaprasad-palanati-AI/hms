@@ -206,6 +206,11 @@ table a:hover {
     padding: 8px;
   }
 }
+@media print {
+  .no-print {
+    display: none;
+  }
+}
 .center-links {
   text-align: center;
   margin-top: 10px;
@@ -336,22 +341,24 @@ header h2 {
   margin-bottom: 15px; /* Adds spacing between input fields */
   box-sizing: border-box; /* Includes padding in width calculation */
 }
-
+/* General button styles */
 button {
-  display: block;
-  width: 100%;
-  padding: 10px;
+  padding: 10px 20px;
   background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  display: inline-block; /* Ensure natural width */
+  align-items: center; /* Center text vertically */
 }
 
 button:hover {
   background-color: #0056b3;
 }
-
 /* Error message styling */
 .message {
   color: #ff0000;

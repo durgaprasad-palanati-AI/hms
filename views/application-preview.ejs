@@ -10,6 +10,7 @@
   <header>
     <img src="/images/Headermgujpg.webp" alt="Logo" class="logo-image" />
     <h1>Preview Application</h1>
+    <h3> <a href="/" class="right-link">Home</a></h3>
   </header>
   
   <div class="preview-container">
@@ -28,9 +29,8 @@
     <% for (let key in formData) { %>
       <input type="hidden" name="<%= key %>" value="<%= formData[key] %>">
     <% } %>
-    <button type="submit" class="btn">Confirm and Submit</button>
+    <button type="submit" class="btn" aria-label="Confirm and Submit">Confirm and Submit</button>
+    <button type="button" onclick="window.history.back()" class="button" aria-label="Edit">Edit</button>
   </form>
-
-  <button onclick="window.history.back()" class="btn">Edit</button>
 </body>
 </html>

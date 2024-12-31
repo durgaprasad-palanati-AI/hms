@@ -569,12 +569,12 @@ router.post('/apply/submit', (req, res) => {
 
   const insertApplicationFormQuery = `
     INSERT INTO hostel_applicationform (
-      application_type, roll_number, full_name, fathers_guardians_name, profession_of_father_guardian, annual_income_father_guardian,
+      application_type, roll_number, full_name, date_of_birth,fathers_guardians_name, profession_of_father_guardian, annual_income_father_guardian,
       mobile_no, place_of_birth, distance_from_residence_to_college, student_aadhaar_no, address_line1,
       address_line2, city, district, state, country, pincode, contact_number, email_id, course, place_of_study,
       study_period, education_details_vi_to_xth, education_details_intermediate, nationality, category,
       sub_caste, food_preference
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
   `;
 
   // Insert into `hostel_applicationform` table
@@ -584,6 +584,7 @@ router.post('/apply/submit', (req, res) => {
       formData.application_type,
       formData.roll_number,
       formData.full_name,
+      new Date(formData.date_of_birth).toISOString().split('T')[0],
       formData.fathers_guardians_name,
       formData.profession_of_father_guardian,
       formData.annual_income_father_guardian,

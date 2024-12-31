@@ -36,8 +36,14 @@
       <% if (applications.length > 0) { %>
         <% applications.forEach(application => { %>
           <tr>
-            <% Object.values(application).forEach(value => { %>
-              <td><%= value %></td>
+            <% Object.keys(application).forEach(key => { %>
+              <td>
+                <% if (key === 'date_of_birth') { %>
+                  <%= new Date(application[key]).toDateString().split(' ').slice(1).join(' ') %>
+                <% } else { %>
+                  <%= application[key] %>
+                <% } %>
+              </td>
             <% }) %>
             <td>
               <a href="/approval/<%= application.id %>">Approval</a>

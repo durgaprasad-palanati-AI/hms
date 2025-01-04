@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Preview Application</title>
   <link rel="stylesheet" href="../styles/style.css">
+  <style>
+    /* Style for the disabled "Confirm and Submit" button */
+    #submit-btn:disabled {
+      opacity: 0.5; /* Make the button faded */
+      cursor: not-allowed; /* Show a 'not-allowed' cursor */
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -25,12 +32,64 @@
     </table>
   </div>
 
+  <form id="otp-form" action="/apply/verify-otp" method="POST">
+    <label for="email">Enter Email to Verify:</label>
+    <input type="email" name="email" id="email" required>
+    <button type="button" onclick="sendOtp()">Send OTP</button>
+  </form>
+
+  <div id="otp-section" style="display: none;">
+    <label for="otp">Enter OTP:</label>
+    <input type="text" name="otp" id="otp" required>
+    <button type="button" onclick="verifyOtp()">Verify OTP</button>
+  </div>
+
   <form action="/apply/submit" method="POST" class="login-form">
     <% for (let key in formData) { %>
       <input type="hidden" name="<%= key %>" value="<%= formData[key] %>">
     <% } %>
-    <button type="submit" class="btn" aria-label="Confirm and Submit">Confirm and Submit</button>
+    <!-- Initially disabled button -->
+    <button id="submit-btn" type="submit" class="btn" aria-label="Confirm and Submit" disabled>Confirm and Submit</button>
     <button type="button" onclick="window.history.back()" class="button" aria-label="Edit">Edit</button>
   </form>
+
+  <script>
+    function sendOtp() {
+      const email = document.getElementById('email').value;
+      fetch('/apply/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      .then(response => response.text())
+      .then(data => {
+        alert(data);
+        document.getElementById('otp-section').style.display = 'block';
+      })
+      .catch(err => alert('Error sending OTP'));
+    }
+
+    function verifyOtp() {
+      const otp = document.getElementById('otp').value;
+      fetch('/apply/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ otp }),
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('OTP verified successfully');
+          // Enable the "Confirm and Submit" button after successful OTP verification
+          document.getElementById('submit-btn').disabled = false;
+           // Hide OTP form and section after successful OTP verification
+           document.getElementById('otp-form').style.display = 'none';
+          document.getElementById('otp-section').style.display = 'none';
+        } else {
+          alert('Invalid OTP');
+        }
+      })
+      .catch(err => alert('Error verifying OTP'));
+    }
+  </script>
 </body>
 </html>

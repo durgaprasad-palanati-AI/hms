@@ -2,7 +2,16 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const db = require('../config/db'); // We will configure db separately
-
+const nodemailer = require('nodemailer');
+const crypto = require('crypto'); // For generating OTPs
+// Configure email transporter
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: 'dp.cse5@gmail.com', // Replace with your email
+    pass: 'kgobdkusksrcmmoe',       // Replace with your email password or app password
+  },
+});
 // Route: Home Page
 router.get('/', (req, res) => {
   res.render('index');
@@ -563,6 +572,43 @@ router.post('/apply/preview', (req, res) => {
   const formData = req.body; // Collect form data
   res.render('application-preview', { formData });
 });
+//*************************
+// Send OTP
+router.post('/apply/send-otp', (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).send('Email is required');
+
+  const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
+  req.session.otp = otp;
+  req.session.email = email;
+
+  // Send OTP via email
+  const mailOptions = {
+    from: 'dp.cse5@gmail.com', // Replace with your email
+    to: email,
+    subject: 'Your OTP for Hostel Application form Verification',
+    text: `Your OTP is: ${otp}`,
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error('Error sending OTP:', err);
+      return res.status(500).send('Failed to send OTP');
+    }
+    res.status(200).send('OTP sent successfully');
+  });
+});
+
+// Verify OTP
+router.post('/apply/verify-otp', (req, res) => {
+  const { otp } = req.body;
+  if (req.session.otp !== otp) {
+    return res.status(400).send('Invalid OTP');
+  }
+  req.session.otpVerified = true; // Mark OTP as verified
+  res.status(200).send('OTP verified successfully');
+});
+//*************************
 // Route to handle final submission
 router.post('/apply/submit', (req, res) => {
   const formData = req.body;
@@ -584,7 +630,7 @@ router.post('/apply/submit', (req, res) => {
       formData.application_type,
       formData.roll_number,
       formData.full_name,
-      new Date(formData.date_of_birth).toISOString().split('T')[0],
+     new Date(formData.date_of_birth).toISOString().split('T')[0],
       formData.fathers_guardians_name,
       formData.profession_of_father_guardian,
       formData.annual_income_father_guardian,
@@ -636,6 +682,7 @@ router.post('/apply/submit', (req, res) => {
  // Store formData and applicationNumber in the session
  req.session.formData = formData;
  req.session.applicationNumber = applicationNumber;
+ req.session.otpVerified = false; // Reset OTP verification status***********************
           // Render success page if both inserts are successful
           res.redirect('/apply/success');
         }
